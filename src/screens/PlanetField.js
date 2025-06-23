@@ -9,108 +9,91 @@ export class PlanetField extends PIXI.Container {
 
     const { width, height } = app.renderer;
 
-    // Currencies
     let dust = 0;
     let magmaton = 0;
-
-    // weapon placeholder
     let weaponCount = 5;
     const weaponDamage = 25;
 
-    // planets data
     const planets = [
-      { id: 1, hp: 100, maxHp: 100, destroyed: false },
-      { id: 2, hp: 120, maxHp: 120, destroyed: false },
-      { id: 3, hp: 150, maxHp: 150, destroyed: false },
+      {
+        planetId: 1,
+        hp: 100,
+        maxHp: 100,
+        destroyedAt: null,
+        harvested: false,
+        resourceProfile: { baseYield: 50, multiplier: 1 },
+      },
+      {
+        planetId: 2,
+        hp: 130,
+        maxHp: 130,
+        destroyedAt: null,
+        harvested: false,
+        resourceProfile: { baseYield: 70, multiplier: 1 },
+      },
     ];
-    let current = 0;
+    let currentIndex = 0;
 
-    // HUD
+    const hud = new PIXI.Container();
     const dustText = new PIXI.Text(`Dust: ${dust}`, { fill: 'white' });
+    const magText = new PIXI.Text(`Magmaton: ${magmaton}`, { fill: 'white' });
     dustText.x = 10;
     dustText.y = 10;
-    const magmatonText = new PIXI.Text(`Magmaton: ${magmaton}`, { fill: 'white' });
-    magmatonText.x = 10;
-    magmatonText.y = 30;
-    this.addChild(dustText, magmatonText);
+    magText.x = 10;
+    magText.y = 30;
+    hud.addChild(dustText, magText);
+    this.addChild(hud);
 
-    // Leaderboard button
-    const leaderboardBtn = new PIXI.Text('LB', { fill: 'yellow' });
-    leaderboardBtn.interactive = true;
-    leaderboardBtn.buttonMode = true;
-    leaderboardBtn.x = width - 40;
-    leaderboardBtn.y = 10;
-    leaderboardBtn.on('pointertap', () => {
+    const lbBtn = new PIXI.Text('LB', { fill: 'yellow' });
+    lbBtn.x = width - 40;
+    lbBtn.y = 10;
+    lbBtn.interactive = true;
+    lbBtn.buttonMode = true;
+    lbBtn.on('pointertap', () => {
       this.stateManager.changeState('leaderboard');
     });
-    this.addChild(leaderboardBtn);
+    this.addChild(lbBtn);
 
-    // planet container
-    const planetContainer = new PIXI.Container();
-    planetContainer.x = width / 2;
-    planetContainer.y = height * 0.4;
-    this.addChild(planetContainer);
+    const planetView = new PIXI.Container();
+    planetView.x = width / 2;
+    planetView.y = height * 0.5;
+    this.addChild(planetView);
 
     const planetGraphic = new PIXI.Graphics();
-    planetContainer.addChild(planetGraphic);
+    planetView.addChild(planetGraphic);
 
-    const hpBarBg = new PIXI.Graphics();
-    hpBarBg.beginFill(0x333333);
-    hpBarBg.drawRect(-75, -110, 150, 10);
-    hpBarBg.endFill();
-    planetContainer.addChild(hpBarBg);
+    const hpBg = new PIXI.Graphics();
+    hpBg.beginFill(0x333333);
+    hpBg.drawRect(-70, -110, 140, 10);
+    hpBg.endFill();
+    planetView.addChild(hpBg);
 
     const hpBar = new PIXI.Graphics();
-    planetContainer.addChild(hpBar);
+    planetView.addChild(hpBar);
 
-    function drawPlanet() {
-      const p = planets[current];
-      planetGraphic.clear();
-      planetGraphic.beginFill(p.destroyed ? 0x555555 : 0x8888ff);
-      planetGraphic.drawCircle(0, 0, 60);
-      planetGraphic.endFill();
-
-      hpBar.clear();
-      hpBar.beginFill(0xff5555);
-      const ratio = p.hp / p.maxHp;
-      hpBar.drawRect(-75, -110, 150 * ratio, 10);
-      hpBar.endFill();
-    }
-
-    drawPlanet();
-
-    // attack button
     const attackBtn = new PIXI.Graphics();
-    attackBtn.beginFill(0x444444);
-    attackBtn.drawRoundedRect(-60, 0, 120, 40, 8);
+    attackBtn.beginFill(0x555555);
+    attackBtn.drawRoundedRect(-60, -20, 120, 40, 8);
     attackBtn.endFill();
-    attackBtn.y = height * 0.65;
     attackBtn.x = width / 2;
+    attackBtn.y = height * 0.75;
     attackBtn.interactive = true;
     attackBtn.buttonMode = true;
-    attackBtn.on('pointertap', () => {
-      const planet = planets[current];
-      if (planet.destroyed || weaponCount <= 0) return;
-      planet.hp -= weaponDamage;
-      weaponCount -= 1;
-      if (planet.hp <= 0) {
-        planet.hp = 0;
-        planet.destroyed = true;
-        dust += 50;
-        dustText.text = `Dust: ${dust}`;
-        showDispatch();
-      }
-      drawPlanet();
-    });
-    const attackLabel = new PIXI.Text('Attack', { fill: 'white' });
-    attackLabel.anchor.set(0.5);
-    attackBtn.addChild(attackLabel);
+    const attackTxt = new PIXI.Text('Attack', { fill: 'white' });
+    attackTxt.anchor.set(0.5);
+    attackBtn.addChild(attackTxt);
+    attackBtn.on('pointertap', onAttack);
     this.addChild(attackBtn);
 
-    // dispatch panel
+    const popup = new PIXI.Text('', { fill: 'yellow' });
+    popup.anchor.set(0.5);
+    popup.x = width / 2;
+    popup.visible = false;
+    this.addChild(popup);
+
     const dispatchPanel = new PIXI.Container();
-    dispatchPanel.y = height * 0.75;
     dispatchPanel.x = width / 2 - 150;
+    dispatchPanel.y = height * 0.8;
     dispatchPanel.visible = false;
     this.addChild(dispatchPanel);
 
@@ -123,11 +106,7 @@ export class PlanetField extends PIXI.Container {
       btn.x = i * 80;
       btn.interactive = true;
       btn.buttonMode = true;
-      btn.on('pointertap', () => {
-        dispatchPanel.visible = false;
-        planets[current].harvested = true;
-        nextPlanet();
-      });
+      btn.on('pointertap', () => dispatchUnit(u));
       const t = new PIXI.Text(u, { fill: 'white', fontSize: 12 });
       t.anchor.set(0.5);
       t.x = 35;
@@ -136,41 +115,67 @@ export class PlanetField extends PIXI.Container {
       dispatchPanel.addChild(btn);
     });
 
-    function showDispatch() {
-      dispatchPanel.visible = true;
-    }
+    const searchPanel = new PIXI.Container();
+    searchPanel.x = width / 2;
+    searchPanel.y = height * 0.5;
+    searchPanel.visible = false;
+    this.addChild(searchPanel);
 
-    // bottom navigation
+    const searchText = new PIXI.Text('', { fill: 'white' });
+    searchText.anchor.set(0.5);
+    searchPanel.addChild(searchText);
+
+    const skipBtn = new PIXI.Graphics();
+    skipBtn.beginFill(0x444444);
+    skipBtn.drawRoundedRect(-50, 20, 100, 30, 6);
+    skipBtn.endFill();
+    skipBtn.interactive = true;
+    skipBtn.buttonMode = true;
+    const skipTxt = new PIXI.Text('Skip', { fill: 'white', fontSize: 12 });
+    skipTxt.anchor.set(0.5);
+    skipTxt.x = 0;
+    skipTxt.y = 35;
+    skipBtn.addChild(skipTxt);
+    skipBtn.on('pointertap', () => {
+      if (searchTimer) {
+        clearInterval(searchTimer);
+        searchTimer = null;
+        spawnPlanet();
+      }
+    });
+    searchPanel.addChild(skipBtn);
+
     const nav = new PIXI.Container();
     nav.y = height - 50;
     this.addChild(nav);
-    const screens = [
+
+    const navItems = [
       ['Arsenal', 'arsenalLab'],
       ['Upgrades', 'upgrades'],
       ['Dispatch', 'dispatchCenter'],
       ['Wheel', 'fortuneWheel'],
     ];
-    screens.forEach((s, i) => {
+    navItems.forEach((n, i) => {
       const btn = new PIXI.Graphics();
       btn.beginFill(0x333333);
       btn.drawRect(0, 0, width / 4, 50);
       btn.endFill();
-      btn.x = (width / 4) * i;
+      btn.x = i * (width / 4);
       btn.interactive = true;
       btn.buttonMode = true;
-      btn.on('pointertap', () => {
-        stateManager.changeState(s[1]);
-      });
-      const txt = new PIXI.Text(s[0], { fill: 'white' });
-      txt.anchor.set(0.5);
-      txt.x = width / 8;
-      txt.y = 25;
-      btn.addChild(txt);
+      btn.on('pointertap', () => stateManager.changeState(n[1]));
+      const t = new PIXI.Text(n[0], { fill: 'white' });
+      t.anchor.set(0.5);
+      t.x = width / 8;
+      t.y = 25;
+      btn.addChild(t);
       nav.addChild(btn);
     });
 
-    // swipe detection
     let startX = null;
+    let searchTimer = null;
+    let searchCountdown = 0;
+
     this.on('pointerdown', (e) => {
       startX = e.data.global.x;
     });
@@ -182,25 +187,134 @@ export class PlanetField extends PIXI.Container {
       startX = null;
     });
 
+    function drawPlanet() {
+      const planet = planets[currentIndex];
+      if (!planet) return;
+      planetGraphic.clear();
+      planetGraphic.beginFill(planet.destroyedAt ? 0x555555 : 0x8888ff);
+      planetGraphic.drawCircle(0, 0, 60);
+      planetGraphic.endFill();
+
+      hpBar.clear();
+      hpBar.beginFill(0xff4444);
+      const r = planet.hp / planet.maxHp;
+      hpBar.drawRect(-70, -110, 140 * r, 10);
+      hpBar.endFill();
+
+      dispatchPanel.visible = planet.destroyedAt && !planet.harvested;
+      attackBtn.visible = !planet.destroyedAt;
+      searchPanel.visible = false;
+    }
+
+    function onAttack() {
+      const planet = planets[currentIndex];
+      if (!planet || planet.destroyedAt || weaponCount <= 0) return;
+      planet.hp -= weaponDamage;
+      weaponCount -= 1;
+      if (planet.hp <= 0) {
+        planet.hp = 0;
+        planet.destroyedAt = Date.now();
+        const reward = Math.floor(planet.resourceProfile.baseYield * planet.resourceProfile.multiplier);
+        dust += reward;
+        dustText.text = `Dust: ${dust}`;
+        popup.text = `+${reward} Dust`;
+        popup.y = planetView.y - 80;
+        popup.alpha = 1;
+        popup.visible = true;
+        app.ticker.add(fadePopup);
+        dispatchPanel.visible = true;
+      }
+      drawPlanet();
+    }
+
+    function fadePopup() {
+      popup.y -= 1;
+      popup.alpha -= 0.02;
+      if (popup.alpha <= 0) {
+        popup.visible = false;
+        app.ticker.remove(fadePopup);
+      }
+    }
+
+    function dispatchUnit() {
+      const planet = planets[currentIndex];
+      if (!planet || planet.harvested) return;
+      planet.harvested = true;
+      dispatchPanel.visible = false;
+      startSearch(3, 'Harvesting');
+    }
+
     function prevPlanet() {
-      if (current > 0) {
-        current -= 1;
+      if (searchTimer) return;
+      if (currentIndex > 0) {
+        currentIndex -= 1;
         drawPlanet();
-        dispatchPanel.visible = planets[current].destroyed && !planets[current].harvested;
       }
     }
 
     function nextPlanet() {
-      if (current < planets.length - 1) {
-        current += 1;
+      if (searchTimer) return;
+      if (currentIndex < planets.length - 1) {
+        currentIndex += 1;
         drawPlanet();
-        dispatchPanel.visible = planets[current].destroyed && !planets[current].harvested;
+      } else {
+        startSearch(5, 'Searching for planet');
       }
     }
 
-    this.destroy = (options) => {
+    function startSearch(sec, text) {
+      searchCountdown = sec;
+      searchText.text = `${text}... ${searchCountdown}s`;
+      planetGraphic.clear();
+      hpBar.clear();
+      attackBtn.visible = false;
+      dispatchPanel.visible = false;
+      searchPanel.visible = true;
+      searchTimer = setInterval(() => {
+        searchCountdown -= 1;
+        searchText.text = `${text}... ${searchCountdown}s`;
+        if (searchCountdown <= 0) {
+          clearInterval(searchTimer);
+          searchTimer = null;
+          if (text === 'Searching for planet') spawnPlanet();
+          else completeHarvest();
+        }
+      }, 1000);
+    }
+
+    function spawnPlanet() {
+      const id = planets.length ? planets[planets.length - 1].planetId + 1 : 1;
+      planets.push({
+        planetId: id,
+        hp: 100 + id * 20,
+        maxHp: 100 + id * 20,
+        destroyedAt: null,
+        harvested: false,
+        resourceProfile: { baseYield: 50 + id * 10, multiplier: 1 },
+      });
+      currentIndex = planets.length - 1;
+      drawPlanet();
+    }
+
+    function completeHarvest() {
+      const planet = planets[currentIndex];
+      const reward = planet.resourceProfile.baseYield * 2;
+      dust += reward;
+      dustText.text = `Dust: ${dust}`;
+      planets.splice(currentIndex, 1);
+      if (currentIndex >= planets.length) currentIndex = planets.length - 1;
+      if (planets.length === 0) startSearch(5, 'Searching for planet');
+      else drawPlanet();
+      searchPanel.visible = false;
+    }
+
+    drawPlanet();
+
+    this.destroy = (opts) => {
+      if (searchTimer) clearInterval(searchTimer);
+      app.ticker.remove(fadePopup);
       this.removeAllListeners();
-      super.destroy(options);
+      super.destroy(opts);
     };
   }
 }
