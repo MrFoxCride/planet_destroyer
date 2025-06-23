@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 export class PlanetField extends PIXI.Container {
   constructor(app, stateManager) {
     super();
+    console.log('PlanetField loaded');
     this.app = app;
     this.stateManager = stateManager;
     this.interactive = true;
