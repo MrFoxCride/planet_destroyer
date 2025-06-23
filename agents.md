@@ -45,6 +45,10 @@ Screens are loaded via `StateManager.changeState(screenName)`.
 
 ## RENDERING STRUCTURE
 
+- HTML структура проекта:
+  - `#game-container`: сюда вставляется `app.view` PixiJS
+  - `#ui-layer`: DOM-слой для UI поверх канваса (например, React/HUD)
+
 - Pixi canvas injected into `<div id="game-container">`
 - DOM UI overlays in `<div id="ui-layer">` (Tailwind-driven)
 - Only one screen (PIXI.Container) visible at a time

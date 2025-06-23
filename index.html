@@ -1,19 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Planet Destroyer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
-  <body class="bg-black text-white m-0 p-0 overflow-hidden">
-    <!-- Канвас PixiJS -->
-    <div id="game-container" class="fixed inset-0 z-0"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>Planet Destroyer</title>
 
-    <!-- UI поверх канваса -->
-    <div id="ui-layer" class="fixed inset-0 z-10 pointer-events-none flex items-center justify-center">
-      <div class="text-2xl">Planet Destroyer UI Layer</div>
-    </div>
+  <!-- TMA-compatible full height, no scaling, dark theme -->
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+    #game-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    #ui-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Канвас PixiJS -->
+  <div id="game-container"></div>
+
+  <!-- UI поверх канваса -->
+  <div id="ui-layer">
+    <div class="text-2xl">Planet Destroyer UI Layer</div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>
