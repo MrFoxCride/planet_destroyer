@@ -1,5 +1,6 @@
 export class LoadingScreen {
   constructor() {
-    // TODO: implement actual loading logic
+    console.log('LoadingScreen initialized');
+	    // TODO: implement actual loading logic
   }
 }
