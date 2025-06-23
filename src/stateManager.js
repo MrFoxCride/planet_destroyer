@@ -20,34 +20,35 @@ export class StateManager {
       this.currentScene.destroy({ children: true });
     }
 
-	switch (stateName) {
-	case 'planetField':
-		this.currentScene = new PlanetField(this.app, this);
-		break;
-	case 'loading':
-		this.currentScene = new LoadingScreen(this.app, this);
-		break;
-	case 'arsenalLab':
-		this.currentScene = new ArsenalLab(this.app, this);
-		break;
-	case 'upgrades':
-		this.currentScene = new Upgrades(this.app, this);
-		break;
-	case 'dispatchCenter':
-		this.currentScene = new DispatchCenter(this.app, this);
-		break;
-	case 'fortuneWheel':
-		this.currentScene = new FortuneWheel(this.app, this);
-		break;
-	case 'leaderboard':
-		this.currentScene = new Leaderboard(this.app, this);
-		break;
-	default:
-		console.warn(`Unknown state: ${stateName}`);
-	return;
-	}
+    let scene;
+    switch (stateName) {
+      case 'planetField':
+        scene = new PlanetField(this.app, this);
+        break;
+      case 'loading':
+        scene = new LoadingScreen(this.app, this);
+        break;
+      case 'arsenalLab':
+        scene = new ArsenalLab(this.app, this);
+        break;
+      case 'upgrades':
+        scene = new Upgrades(this.app, this);
+        break;
+      case 'dispatchCenter':
+        scene = new DispatchCenter(this.app, this);
+        break;
+      case 'fortuneWheel':
+        scene = new FortuneWheel(this.app, this);
+        break;
+      case 'leaderboard':
+        scene = new Leaderboard(this.app, this);
+        break;
+      default:
+        console.warn(`Unknown state: ${stateName}`);
+        return;
+    }
 
-
+    this.currentScene = scene;
     this.app.stage.addChild(this.currentScene);
   }
 }
