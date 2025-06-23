@@ -14,6 +14,9 @@ async function main() {
 
   // Добавляем канвас в HTML
   document.getElementById('game-container').appendChild(app.canvas);
+  // Hide placeholder UI overlay
+  const uiLayer = document.getElementById('ui-layer');
+  if (uiLayer) uiLayer.style.display = 'none';
 
   // FSM — переключение экранов
   const stateManager = new StateManager(app);
