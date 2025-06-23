@@ -1,5 +1,6 @@
 // FSM — отвечает за переключение экранов (PlanetField, Arsenal и др.)
 import { PlanetField } from './screens/PlanetField.js';
+import { LoadingScreen } from './screens/LoadingScreen.js';
 import { ArsenalLab } from './screens/ArsenalLab.js';
 import { Upgrades } from './screens/Upgrades.js';
 import { DispatchCenter } from './screens/DispatchCenter.js';
@@ -19,23 +20,33 @@ export class StateManager {
       this.currentScene.destroy({ children: true });
     }
 
-    switch (stateName) {
-      case 'planetField':
-        this.currentScene = new PlanetField(this.app); break;
-      case 'arsenal':
-        this.currentScene = new ArsenalLab(this.app); break;
-      case 'upgrades':
-        this.currentScene = new Upgrades(this.app); break;
-      case 'dispatch':
-        this.currentScene = new DispatchCenter(this.app); break;
-      case 'wheel':
-        this.currentScene = new FortuneWheel(this.app); break;
-      case 'leaderboard':
-        this.currentScene = new Leaderboard(this.app); break;
-      default:
-        console.warn(`Unknown state: ${stateName}`);
-        return;
-    }
+	switch (stateName) {
+	case 'planetField':
+		this.currentScene = new PlanetField(this.app, this);
+		break;
+	case 'loading':
+		this.currentScene = new LoadingScreen(this.app, this);
+		break;
+	case 'arsenalLab':
+		this.currentScene = new ArsenalLab(this.app, this);
+		break;
+	case 'upgrades':
+		this.currentScene = new Upgrades(this.app, this);
+		break;
+	case 'dispatchCenter':
+		this.currentScene = new DispatchCenter(this.app, this);
+		break;
+	case 'fortuneWheel':
+		this.currentScene = new FortuneWheel(this.app, this);
+		break;
+	case 'leaderboard':
+		this.currentScene = new Leaderboard(this.app, this);
+		break;
+	default:
+		console.warn(`Unknown state: ${stateName}`);
+	return;
+	}
+
 
     this.app.stage.addChild(this.currentScene);
   }
