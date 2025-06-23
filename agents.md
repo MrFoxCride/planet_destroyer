@@ -9,18 +9,11 @@ This project is a fully modular and scalable boilerplate for creating swipe-base
 - FSM-based screen navigation
 - Optional AI Dev (Codex) integration
 
+- Полное видение игры — в `docs/0-vision.md`, начинай с чтения именно этого файла, чтобы освежить память о продукте.
+
 ## GAME SCREENS
 
 Each game screen is a separate class extending `PIXI.Container`, stored in `src/screens/`.
-
-| Screen Name     | File                        | Purpose                              |
-|------------------|-----------------------------|--------------------------------------|
-| PlanetField      | `PlanetField.js`            | Core loop: swipe, destroy, harvest   |
-| ArsenalLab       | `ArsenalLab.js`             | Weapon crafting system               |
-| Upgrades         | `Upgrades.js`               | Permanent soft-currency upgrades     |
-| DispatchCenter   | `DispatchCenter.js`         | Timed units for residual harvest     |
-| FortuneWheel     | `FortuneWheel.js`           | Rewarded ad spin, boosts             |
-| Leaderboard      | `Leaderboard.js`            | Fake leaderboard UI                  |
 
 Screens are loaded via `StateManager.changeState(screenName)`.
 
@@ -50,4 +43,3 @@ Screens are loaded via `StateManager.changeState(screenName)`.
 - Avoid writing to DOM directly — prefer Pixi or Tailwind UI
 
 ## INIT COMMAND
-
