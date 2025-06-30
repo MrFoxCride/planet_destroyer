@@ -34,6 +34,11 @@
 - **Long tap** — optional extended interaction (e.g., fast dispatch)
 - Scrolls, drag/drop, double-tap: DISALLOWED unless explicitly specified per screen
 
+### Android Back Button Behavior
+- If a modal/overlay is open → close the topmost UI-layer element
+- Else if not on MainScreen → call `goBack()` from FSM stack
+- Else (on MainScreen) → do nothing
+
 ## 1.5. Asset Handling
 - All assets must exist or be auto-generated placeholders:
   - Sprites → `/assets/sprites/`
