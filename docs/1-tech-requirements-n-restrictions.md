@@ -73,6 +73,23 @@
 - Auto-resume all timers after reconnect
 - Offline time delta must be handled (e.g. `dispatch` resume)
 
+### 1.7.1 Save Schema
+
+- All save/load must conform to `SaveState` schema:
+ts
+interface SaveState {
+  player: { vipLevel: number; usdt: number; };
+  planets: PlanetSave[];
+  units: UnitSave[];
+  resources: { dust: number; cores: number; magmaton: number; };
+  timers: { dispatch: Timer[]; craft: Timer[]; };
+  nav: { currentScreen: string; entityType: string; };
+  lastSeen: ISODateString;
+}
+
+- SaveState must be versioned: save.version = 1.0.0
+- Future schema migrations must go through SaveMigrator
+
 ## 1.8. Network / API Requirements
 - All network calls via HTTPS `fetch()`, `POST/GET`, or WebSocket
 - Back-end endpoints:
@@ -100,13 +117,31 @@
 - Trigger via `?debug=true` or hotkey
 
 ## 1.11. Telemetry & Logging
-- Event hooks must be coded for:
-  - `event.destroy.planet`
-  - `event.craft.weapon`
-  - `event.dispatch.unit`
-  - `event.watch.ad`
-  - `event.withdraw.attempt`
-- Logging via:
-  - Telegram bot messages (optional)
-  - Custom webhook to backend
-  - Internal dev console overlay (`logEvent()`)
+- `logEvent(eventType: string, payload: object)` must support:
+  - **Batch mode**:
+    - Events must be buffered locally (in memory)
+    - Send via `POST /api/logs/batch` every 10 seconds or every 20 events (whichever comes first)
+  - **Throttling**:
+    - Identical event types must not fire more than once per 500ms by default
+    - Exceptions allowed only for combat ticks or resource increments
+  - **Payload extensions**:
+    - `sessionId`, `timestamp`, `eventType`, `payload`, `deviceId`, `version`
+- Event log types must be namespaced:
+  - `combat.attack`, `ui.click`, `dispatch.start`, `economy.spend`, `reward.ad`, etc.
+- Logging must be toggleable:
+  - Disable in `isProd && !isLoggingEnabled`
+  - DevPanel must include `Toggle Logging` switch
+ 
+### 1.12. Feature Flags & Build Modes
+
+- All experimental features must be toggled via `BuildFlags`:
+ts
+const BuildFlags = {
+  enableReignsEvents: true,
+  enableNebulaUSDT: true,
+  showDevPanel: !isProd,
+  logEvents: true,
+}
+
+- Codex must wrap unstable logic in if (BuildFlags.enableXYZ) guards
+- DevPanel must allow toggling flags in real time
