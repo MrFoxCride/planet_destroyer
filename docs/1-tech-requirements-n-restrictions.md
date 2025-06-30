@@ -56,6 +56,10 @@
 - All secondary assets (e.g. Fortune Wheel, Reigns events, leaderboard UI) must be lazy-loaded. Use `AssetLoader.load()` with Promises or hooks before `StateManager.changeState(...)`
 - Destroy inactive screens on exit (`container.destroy()`)
 - Max texture memory: ≤32MB on initial load
+- `logEvent()` must support:
+  - batching mode (flush every 10s or every 20 events)
+  - optional throttle (min delay between same-type events: 500ms)
+  - optional sessionId + local timestamp offset
 
 ## 1.7. Save System
 - **Preferred**: Telegram WebApp Cloud Storage API
