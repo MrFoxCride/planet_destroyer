@@ -4,9 +4,9 @@
 - **Platform**: Telegram Mini App (TMA)
 - **Orientation**: Mobile-only, vertical (9:16)
 - **Connection**: Online-only, no offline mode
-- **Navigation**: No vertical scrolls, tabs, or multi-level nesting
+- **Navigation**: tabs, or multi-level nesting
 - **Screen resolution**: 360×640 to 414×896 px
-- **Input**: Touch-based only (swipe, tap, long tap), no drag/drop
+- **Input**: Touch-based only (swipe, tap, long tap)
 
 ## 1.2. Runtime Architecture
 - React.js for `#ui-layer` (buttons, panels, overlays)
@@ -25,7 +25,7 @@
 - **Swipe** — left/right on PlanetField only (screen-specific)
 - **Tap** — standard interactions (buttons, confirm, spin)
 - **Long tap** — optional extended interaction (e.g., fast dispatch)
-- Scrolls, no drag/drop, no double-tap - availbale if needed by game feature
+- Scrolls, drag/drop, double-tap - availbale if needed by game feature
 
 ## 1.5. Asset Handling
 - All assets must exist or be auto-generated placeholders:
