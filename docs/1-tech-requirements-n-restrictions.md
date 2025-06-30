@@ -4,10 +4,9 @@
 - **Platform**: Telegram Mini App (TMA)
 - **Orientation**: Mobile-only, vertical (9:16)
 - **Connection**: Online-only, no offline mode
-- **Navigation**: tabs, or multi-level nesting
 - **Screen resolution**: 360×640 to 414×896 px
 - **Input**: Touch-based only (swipe, tap, long tap)
-- Navigation: FSM + manual stack
+- **Navigation**: FSM + manual stack
 - Visual tabbar allowed, but no native tab controllers
 - No nested DOM routing
 
