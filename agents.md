@@ -61,6 +61,12 @@ Screens are loaded via `StateManager.changeState(screenName)`.
 - Do NOT use native routing libraries (React Router, TabNavigator)
 - Popups, modals, overlays must render via `#ui-layer` (React or Pixi Z-layer)
 - Overlays must be dismissible, state must be tracked separately from FSM
+- Android Back Button must always be intercepted
+- Follow UX logic:
+  - Close modals first
+  - If FSM screen stack > 1 → `goBack()`
+  - If in MainScreen → ignore press
+- Never use native browser history APIs
 
 
 ## CODE ARCHITECTURE
