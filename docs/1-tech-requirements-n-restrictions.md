@@ -40,6 +40,7 @@
 ## 1.6. Performance Targets
 - ≤75 draw calls per screen (always use per-layer batching)
 - Target memory per session ≤15MB
+- Heavy FX must use batch-friendly particles or skeletal animations. Avoid frame-by-frame large sprite swaps.
 - All secondary assets (e.g. Fortune Wheel, Reigns events, leaderboard UI) must be lazy-loaded. Use `AssetLoader.load()` with Promises or hooks before `StateManager.changeState(...)`
 - Destroy inactive screens on exit (`container.destroy()`)
 
