@@ -10,45 +10,31 @@ import { Leaderboard } from './screens/Leaderboard.js';
 export class StateManager {
   constructor(app) {
     this.app = app;
-    this.currentScene = null;
+    this.currentState = null;
+    this.states = {
+      planetField: PlanetField,
+      loading: LoadingScreen,
+      arsenalLab: ArsenalLab,
+      upgrades: Upgrades,
+      dispatchCenter: DispatchCenter,
+      fortuneWheel: FortuneWheel,
+      leaderboard: Leaderboard,
+    };
   }
 
   // Подключение нового состояния (экрана)
   changeState(stateName) {
-    if (this.currentScene) {
-      this.app.stage.removeChild(this.currentScene);
-      this.currentScene.destroy({ children: true });
+    if (!this.states[stateName]) {
+      console.warn(`Unknown state: ${stateName}`);
+      return;
     }
 
-    let scene;
-    switch (stateName) {
-      case 'planetField':
-        scene = new PlanetField(this.app, this);
-        break;
-      case 'loading':
-        scene = new LoadingScreen(this.app, this);
-        break;
-      case 'arsenalLab':
-        scene = new ArsenalLab(this.app, this);
-        break;
-      case 'upgrades':
-        scene = new Upgrades(this.app, this);
-        break;
-      case 'dispatchCenter':
-        scene = new DispatchCenter(this.app, this);
-        break;
-      case 'fortuneWheel':
-        scene = new FortuneWheel(this.app, this);
-        break;
-      case 'leaderboard':
-        scene = new Leaderboard(this.app, this);
-        break;
-      default:
-        console.warn(`Unknown state: ${stateName}`);
-        return;
+    if (this.currentState && this.currentState.destroy) {
+      this.currentState.destroy();
+      this.app.stage.removeChild(this.currentState);
     }
 
-    this.currentScene = scene;
-    this.app.stage.addChild(this.currentScene);
+    this.currentState = new this.states[stateName](this.app, this);
+    this.app.stage.addChild(this.currentState);
   }
 }
