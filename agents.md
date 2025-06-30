@@ -27,7 +27,7 @@ This project is a fully modular and scalable boilerplate for creating swipe-base
 - All game logic (UI, combat, dispatches, etc.) runs fully client-side in TMA
 - Backend used only for:
   - Account binding / Telegram auth
-  - Save/load player state
+  - Save/load player 
   - IAP & Ad verification
   - USDT withdraw logic
   - Anti-fraud and referrals
@@ -52,7 +52,7 @@ This project is a fully modular and scalable boilerplate for creating swipe-base
 
 ## GAME SCREENS
 Each game screen is a separate class extending `PIXI.Container`, stored in `src/screens/`.
-Screens are loaded via `StateManager.changeState(screenName)`.
+Screens are loaded via `Manager.changeState(screenName)`.
 
 ## NAVIGATION MODEL
 - Core screen logic uses FSM via `StateManager.changeState()`
@@ -68,15 +68,14 @@ Screens are loaded via `StateManager.changeState(screenName)`.
   - If in MainScreen → ignore press
 - Never use native browser history APIs
 
-
 ## CODE ARCHITECTURE
 | Folder           | Content Description                                     |
-|------------------|----------------------------------------------------------|
-| `/screens`       | Pixi containers representing game scenes                 |
+|------------------|---------------------------------------------------------|
+| `/screens`       | Pixi containers representing game scenes                |
 | `/core`          | Utility modules: AssetLoader, SaveManager, TimerManager |
 | `/ui`            | UI components (buttons, bars, overlays)                 |
 | `/data`          | Config files for game logic (JS, not JSON)              |
-| `/assets/sprites`| Static image assets (PNG, atlas, etc.)                 |
+| `/assets`        | Static image assets (PNG, atlas, etc.)                  |
 
 ## CODING RULES
 - All game screens must extend `PIXI.Container`
@@ -94,6 +93,26 @@ Screens are loaded via `StateManager.changeState(screenName)`.
   - batching mode (flush every 10s or every 20 events)
   - optional throttle (min delay between same-type events: 500ms)
   - optional sessionId + local timestamp offset
+
+## GAME STATE MODEL
+- All runtime state (player data, current planet, timers, currency, active screen, etc.) must be stored in `GameStateStore`.
+- No screen/component should maintain long-lived local state except for temporary UI.
+- GameStateStore must be singleton, observable, persistent-safe.
+- Structure:
+  - `player`: id, vipLevel, usdtBalance, sessionId
+  - `game`: currentScreen, navStack, currentEntity (planet | nebula | colony)
+  - `resources`: dust, cores, magmaton
+  - `timers`: dispatchTimers[], craftQueue[]
+ 
+## UI Z-LAYER HIERARCHY
+- All overlays must declare Z-layer explicitly:
+  - Toasts: 100
+  - Confirm / Modals: 200
+  - News / FTUE: 300
+  - DevPanel: 400
+  - Emergency overlay: 999
+- Use `OverlayManager.open(type, zIndex)` for consistent stacking
+- Codex must assign Z-index per overlay type explicitly
 
 ## DEBUG MODE
 - Codex must include a `DevPanel.tsx` React component when generating projects or core screens.
