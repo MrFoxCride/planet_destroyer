@@ -6,7 +6,8 @@ import { StateManager } from './stateManager.js';
 
 async function main() {
   // Инициализируем PixiJS с автоподгонкой под окно
-  const app = await PIXI.Application.init({
+  const app = new PIXI.Application();
+  await app.init({
     resizeTo: window,
     backgroundColor: 0x000000,
     antialias: true,
