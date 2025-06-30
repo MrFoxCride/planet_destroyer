@@ -29,7 +29,7 @@
 - **Swipe** — left/right on PlanetField only (screen-specific)
 - **Tap** — standard interactions (buttons, confirm, spin)
 - **Long tap** — optional extended interaction (e.g., fast dispatch)
-- No scrolls, no drag/drop, no double-tap
+- Scrolls, no drag/drop, no double-tap - availbale if needed by game feature
 
 ## 1.5. Asset Handling
 
@@ -103,11 +103,3 @@
   - Telegram bot messages (optional)
   - Custom webhook to backend
   - Internal dev console overlay (`logEvent()`)
-
-## 1.12. Build System
-
-- Codex submits PR to GitHub
-- Vercel auto-build triggers
-- No SSR, no Node.js dependencies
-- No direct file system access (`fs`, `path`, `process`)
-- Production build must strip debug & placeholder data
