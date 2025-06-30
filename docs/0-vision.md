@@ -20,11 +20,12 @@ You are an anonymous force consuming the universe planet by planet, choosing whe
    - Crafting new weapons  
    - Upgrading units, colonies, and tech  
    - Sending expeditions  
-6. Unlock new planets and sectors  
-7. Trigger Reigns-like events (narrative + decision-based impact)  
-8. Receive passive income from colonies  
-9. Receive daily USDT via Nebula events  
-10. Repeat  
+6. Unlock new planets and sectors
+7. Navigate through Galaxy/Sector map to explore new entities  
+8. Trigger Reigns-like events (narrative + decision-based impact)  
+9. Receive passive income from colonies  
+10. Receive daily USDT via Nebula events  
+11. Repeat  
 
 ## 0.5. Key Systems
 - **Swipe-to-Explore** — Tinder-like horizontal planet navigation  
@@ -34,7 +35,9 @@ You are an anonymous force consuming the universe planet by planet, choosing whe
 - **Expedition System** — Event chains in Reigns-style interaction  
 - **Sectors** — Map-based meta progression with fog-unlock logic  
 - **Fake Leaderboard** — Motivational, referral-linked, no PvP  
-- **USDT Nebula** — Real-money drops via daily timed & ad-gated events  
+- **USDT Nebula** — Real-money drops via daily timed & ad-gated events
+- **Galaxy Map** — high-level overworld. Player selects a Sector here. Visually represented as a galactic cloud map.
+- **Sector Map** — mid-level map inside a selected Sector. Player selects a specific entity (Planet, Colony, Nebula) to enter the main screen.
 
 ## 0.6. Currencies
 - `Cosmic Dust` — main soft currency, used for all major actions  
@@ -66,7 +69,9 @@ There is no final win. The player aims to reach higher sector yield, build passi
 - Input: Swipe (horizontal), tap, long tap  
 - Ads: SDK or mock wrappers for rewarded flow  
 - IAP: Telegram Pay API  
-- Orientation: Vertical 9:16 only  
+- Orientation: Vertical 9:16 only
+- Sector/Galaxy map layers must be represented via 2-step navigation: Galaxy → Sector → Screen
+- Each map uses FSM transition and lazy-loads only active sector/objects  
 
 ## 0.11. Session Structure
 - **Short sessions (1–3 min)** — check timers, collect, trigger events  
