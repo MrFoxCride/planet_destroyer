@@ -26,27 +26,11 @@
       z-index: 0;
     }
 
-    #ui-layer {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: sans-serif;
-      color: white;
-    }
   </style>
 </head>
 <body>
   <!-- Канвас PixiJS -->
   <div id="game-container"></div>
-
-  <!-- UI поверх канваса -->
-  <div id="ui-layer">
-    <div class="text-2xl">Planet Destroyer UI Layer</div>
-  </div>
 
   <script type="module" src="/src/main.js"></script>
 </body>
