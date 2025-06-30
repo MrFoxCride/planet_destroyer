@@ -86,9 +86,10 @@ Screens are loaded via `StateManager.changeState(screenName)`.
 - Ensure Vercel deploy works under TMA runtime (no server-side logic).
 
 ## DEBUG MODE
-Codex must include a `DevPanel.tsx` React component when generating projects or core screens.
-This component must include debug cheats: Add Dust, Skip Ads, Unlock Screens, Force Nebula.
-All debug elements must be wrapped in `if (!isProd)` conditions.
+- Codex must include a `DevPanel.tsx` React component when generating projects or core screens.
+- This component must include debug cheats: Add Dust, Skip Ads, Unlock Screens, Force Nebula.
+- All debug elements must be wrapped in `if (!isProd)` conditions.
+- All overlays must declare Z-order explicitly: e.g., toast < modal < devpanel
 
 ## FILE STRUCTURE EXTENSION RULES
 You are allowed to extend the project structure
