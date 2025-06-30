@@ -1,84 +1,113 @@
-# Planet Destroyer – Technical Requirements and Restrictions
+# 1. Technical Requirements & Restrictions – Planet Destroyer
 
-## Target Platform
+## 1.1. Platform Constraints
 
-- **Telegram Mini App (TMA)**
-- Vertical orientation
-- Online-only
-- No external scrolls or multi-tab navigation
+- **Platform**: Telegram Mini App (TMA)
+- **Orientation**: Mobile-only, vertical (9:16)
+- **Connection**: Online-only, no offline mode
+- **Navigation**: No vertical scrolls, tabs, or multi-level nesting
+- **Screen resolution**: 360×640 to 414×896 px
+- **Input**: Touch-based only (swipe, tap, long tap), no drag/drop
 
-## Device Support
+## 1.2. Runtime Architecture
 
-- Mobile-first
-- Supported screen sizes: 360×640 to 414×896 px
-- Must scale to full screen without overflow or scroll
+- React.js for `#ui-layer` (buttons, panels, overlays)
+- PixiJS v7 for `#game-canvas` (rendered scenes)
+- TailwindCSS for layout and UI styling
+- Vite for local dev and builds
+- Codex auto-generates game logic, UI, placeholder assets, and PRs
 
-## Rendering Engine
+## 1.3. Screen System & FSM
 
-- **PixiJS (v7)** with WebGL fallback
-- Canvas embedded in `#game-container`
-- UI overlays through TailwindCSS in `#ui-layer`
+- Navigation managed via `StateManager.changeState(screenName)`
+- All screens are subclasses of `PIXI.Container`
+- No DOM routing; FSM manages transitions and resets
+- Only one active screen at a time (stateless except PlanetField)
 
-## Performance Constraints
+## 1.4. Input System
+
+- **Swipe** — left/right on PlanetField only (screen-specific)
+- **Tap** — standard interactions (buttons, confirm, spin)
+- **Long tap** — optional extended interaction (e.g., fast dispatch)
+- No scrolls, no drag/drop, no double-tap
+
+## 1.5. Asset Handling
+
+- All assets must exist or be auto-generated placeholders:
+  - Sprites → `/assets/sprites/`
+  - VFX → `/assets/vfx/`
+  - UI → `/assets/ui/`
+- `assets.json` or `spritesheets.json` must always be updated
+- Texture atlases required where possible
+- Image formats: `.webp` (preferred), `.png` fallback
+- Audio: only short `.mp3` or `.ogg` SFX under 200kb
+
+## 1.6. Performance Targets
 
 - ≤60 draw calls per screen
-- ≤10MB memory load per session (target)
-- Use texture atlases where possible
+- ≤10MB memory per session
+- Lazy-load secondary assets (e.g., FX, wheel spin, leaderboard)
+- Destroy inactive screens on exit (`container.destroy()`)
 
-## Controls
+## 1.7. Save System
 
-- **Swipe left/right only**
-  - Horizontal swipe to navigate planets
-- **Tap**
-  - To attack, craft, collect, spin
-- **Long press**
-  - For advanced interactions (optional)
-- **No drag/drop**
-- **No vertical scroll**
+- **Preferred**: Telegram WebApp Cloud Storage API
+- **Fallback**: `localStorage`
+- Save Keys:
+  - `save.playerStats`
+  - `save.planetQueue`
+  - `save.unitTimers`
+  - `save.resources`
+  - `save.lastSeen`
+- Auto-resume all timers after reconnect
+- Offline time delta must be handled (e.g. `dispatch` resume)
 
-## Audio
+## 1.8. Network / API Requirements
 
-- SFX only (short, lightweight)
-- No background music
-- AudioContext must be gated behind user interaction (for autoplay rules)
+- All network calls via HTTPS `fetch()`, `POST/GET`, or WebSocket
+- Back-end endpoints:
+  - `/api/player/bind`
+  - `/api/save/load`
+  - `/api/withdraw/initiate`
+  - `/api/referral/use`
+- Ad events and IAP routed via Telegram SDK (BotFather)
+- Must function under TMA runtime with no SSR
 
-## Persistence
+## 1.9. Ads & IAP Integration
 
-- **localStorage** fallback
-- **Telegram WebApp Cloud Storage API** (preferred, if authenticated)
-- State must resume seamlessly after reload or reconnect
+- **Ads**: rewarded only (e.g., Fortune Wheel, speedups, Nebula)
+  - Placeholder: `setTimeout` + alert for dev mode
+- **IAP**: via Telegram Payments (Magmaton packs, bundles)
+- Entry points must be coded even if SDK is mocked in dev
 
-## Session Management
+## 1.10. Dev Tools & Debug Mode
 
-- Real-time timers (for units, crafting)
-- Auto-resume timers on reconnect
-- Offline time calculation must be correct on restore
+- Must include `DevPanel.tsx` React overlay
+- Toggles:
+  - Add Dust
+  - Skip ads
+  - Unlock screens
+  - Force Nebula drop
+- Only visible if `!isProd`
+- Trigger via `?debug=true` or hotkey
 
-## Networking
+## 1.11. Telemetry & Logging
 
-- Must support:
-  - Ad calls (for rewarded videos)
-  - IAP initiation via Telegram API
-- Online connection is mandatory
+- Event hooks must be coded for:
+  - `event.destroy.planet`
+  - `event.craft.weapon`
+  - `event.dispatch.unit`
+  - `event.watch.ad`
+  - `event.withdraw.attempt`
+- Logging via:
+  - Telegram bot messages (optional)
+  - Custom webhook to backend
+  - Internal dev console overlay (`logEvent()`)
 
-## Integration Points
+## 1.12. Build System
 
-- **Rewarded Ads (ad network or placeholder)**
-- **Telegram IAP via BotFather**
-- **Fake leaderboard with local simulation**
-- Future optional: Telegram bot message hooks
-
-## File/Asset Constraints
-
-- All image assets must be optimized (webp/png)
-- Use texture atlases where possible
-- Avoid large standalone audio files
-
-## Project Stack
-
-- Vite (dev/build tool)
-- PixiJS (canvas logic)
-- Tailwind (UI overlays)
-- Codex (AI-assist logic insert)
-- GitHub (repo hosting)
-- Telegram WebApp (platform runtime)
+- Codex submits PR to GitHub
+- Vercel auto-build triggers
+- No SSR, no Node.js dependencies
+- No direct file system access (`fs`, `path`, `process`)
+- Production build must strip debug & placeholder data
