@@ -51,12 +51,19 @@ This project is a fully modular and scalable boilerplate for creating swipe-base
 - Перед реализацией всегда анализируй UI Elements и Logic отдельно.
 
 ## GAME SCREENS
-
 Each game screen is a separate class extending `PIXI.Container`, stored in `src/screens/`.
 Screens are loaded via `StateManager.changeState(screenName)`.
 
-## CODE ARCHITECTURE
+## NAVIGATION MODEL
+- Core screen logic uses FSM via `StateManager.changeState()`
+- Visual navigation bar at bottom (tab-style) triggers FSM transitions
+- All screen transitions must use `goTo(screen, params?)` and `goBack()` for history
+- Do NOT use native routing libraries (React Router, TabNavigator)
+- Popups, modals, overlays must render via `#ui-layer` (React or Pixi Z-layer)
+- Overlays must be dismissible, state must be tracked separately from FSM
 
+
+## CODE ARCHITECTURE
 | Folder           | Content Description                                     |
 |------------------|----------------------------------------------------------|
 | `/screens`       | Pixi containers representing game scenes                 |
@@ -66,7 +73,6 @@ Screens are loaded via `StateManager.changeState(screenName)`.
 | `/assets/sprites`| Static image assets (PNG, atlas, etc.)                 |
 
 ## CODING RULES
-
 - All game screens must extend `PIXI.Container`
 - PixiJS rendering must be encapsulated in `#game-canvas`, React interface in `#ui-layer`. 
 - All cross-layer interactions go through a shared `GameStateStore` (global FSM/observer).
