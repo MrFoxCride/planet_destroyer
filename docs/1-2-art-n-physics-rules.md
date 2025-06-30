@@ -184,3 +184,36 @@ VFXSystem.register('planet_explosion', {
   loop: false,
   path: '/assets/vfx/planet_explosion.json'
 });
+
+## 1.1.9. Visual Impact Guidelines (How to Achieve Rich Effects in TMA Limits)
+To preserve visual richness without violating Telegram Mini App constraints, follow these layered design practices:
+
+### Layered FX Composition (composite over raw power)
+- Use multiple lightweight FX stacked:
+  - glow background (`vfx.core.glow`)
+  - animated burst (`vfx.explode.frame`)
+  - flash overlay (`ui.flashFrame`)
+  - smoke trail (`vfx.smoke.loop`)
+- Total ≤4 draw calls → high impact, low cost
+
+### Planet/Unit Animations
+- Use `.spritesheet` for pseudo-3D effects:
+  - Rotate effect = 16-frame sequence
+  - Destruction = 12-frame fracture sheet
+- Animate at 12 FPS to save memory and emphasize stylization
+
+### UI Boosts
+- Overlay temporary UI FX (e.g. bonus popups, fake bloom)
+- Prefer animating UI layers (`fade`, `scale`, `glow pulse`) over canvas VFX
+
+### Fake Physics
+- Simulate motion with staggered tweens:
+  - recoil, bounce, offset, shake
+- Use GSAP or PIXI.tween, avoid physics engines
+
+### Avoid:
+- Shader-based blur/glow/distortion (except rare overlays)
+- Fullscreen particle showers
+- 60FPS VFX loops on >3 entities simultaneously
+
+Codex must prefer visual fakes over real FX logic where possible.
