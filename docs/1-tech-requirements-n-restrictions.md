@@ -7,6 +7,9 @@
 - **Navigation**: tabs, or multi-level nesting
 - **Screen resolution**: 360×640 to 414×896 px
 - **Input**: Touch-based only (swipe, tap, long tap)
+- Navigation: FSM + manual stack
+- Visual tabbar allowed, but no native tab controllers
+- No nested DOM routing
 
 ## 1.2. Runtime Architecture
 - React.js for `#ui-layer` (buttons, panels, overlays)
@@ -20,12 +23,17 @@
 - All screens are subclasses of `PIXI.Container`
 - No DOM routing; FSM manages transitions and resets
 - Only one active screen at a time (stateless except PlanetField)
+- Screen transitions handled via `StateManager.changeState(screenName)`
+- Maintain a manual navStack for history (`goTo()`, `goBack()`)
+- Visual tabs use FSM under the hood
+- React-based popups and modals must mount in `#ui-layer`, not Pixi
+- Multiple overlays allowed simultaneously (modal + toast + HUD)
 
 ## 1.4. Input System
 - **Swipe** — left/right on PlanetField only (screen-specific)
 - **Tap** — standard interactions (buttons, confirm, spin)
 - **Long tap** — optional extended interaction (e.g., fast dispatch)
-- Scrolls, drag/drop, double-tap - availbale if needed by game feature
+- Scrolls, drag/drop, double-tap: DISALLOWED unless explicitly specified per screen
 
 ## 1.5. Asset Handling
 - All assets must exist or be auto-generated placeholders:
@@ -43,6 +51,7 @@
 - Heavy FX must use batch-friendly particles or skeletal animations. Avoid frame-by-frame large sprite swaps.
 - All secondary assets (e.g. Fortune Wheel, Reigns events, leaderboard UI) must be lazy-loaded. Use `AssetLoader.load()` with Promises or hooks before `StateManager.changeState(...)`
 - Destroy inactive screens on exit (`container.destroy()`)
+- Max texture memory: ≤32MB on initial load
 
 ## 1.7. Save System
 - **Preferred**: Telegram WebApp Cloud Storage API
