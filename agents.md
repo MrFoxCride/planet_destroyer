@@ -90,6 +90,10 @@ Screens are loaded via `StateManager.changeState(screenName)`.
 - Avoid writing to DOM directly — prefer Pixi or Tailwind UI
 - Generated code must be fully browser-safe. No Node.js APIs (`fs`, `path`, `process`) are allowed.
 - Ensure Vercel deploy works under TMA runtime (no server-side logic).
+- `logEvent()` must support:
+  - batching mode (flush every 10s or every 20 events)
+  - optional throttle (min delay between same-type events: 500ms)
+  - optional sessionId + local timestamp offset
 
 ## DEBUG MODE
 - Codex must include a `DevPanel.tsx` React component when generating projects or core screens.
