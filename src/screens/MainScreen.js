@@ -133,7 +133,9 @@ export class MainScreen extends PIXI.Container {
   }
 
   killPlanet() {
-    this.destroyMask();
+    if (this.planetMask && this.planetMask.isValid()) {
+      this.planetMask.removeAll();
+    }
     PIXI.Ticker.shared.remove(this.animateIn, this);
     PIXI.Ticker.shared.remove(this.pulseGlow, this);
     if (!store.state.planet.destroyed) {
@@ -160,23 +162,21 @@ export class MainScreen extends PIXI.Container {
 
   launchProjectile(dmg) {
     const { width, height } = this.app.renderer;
-    const side = Math.floor(Math.random() * 4);
-    const start = new PIXI.Point();
-    if (side === 0) {
-      start.set(0, Math.random() * height);
-    } else if (side === 1) {
-      start.set(width, Math.random() * height);
-    } else if (side === 2) {
-      start.set(Math.random() * width, 0);
-    } else {
-      start.set(Math.random() * width, height);
-    }
-    const angle = Math.random() * Math.PI * 2;
+    const theta = Math.random() * Math.PI * 2;
     const localHit = new PIXI.Point(
-      Math.cos(angle) * this.radius,
-      Math.sin(angle) * this.radius
+      Math.cos(theta) * this.radius,
+      Math.sin(theta) * this.radius
     );
     const globalHit = this.planetContainer.toGlobal(localHit);
+    const dir = new PIXI.Point(Math.cos(theta) * -1, Math.sin(theta) * -1);
+    const cx = this.planetContainer.x;
+    const cy = this.planetContainer.y;
+    let t = Infinity;
+    if (dir.x < 0) t = Math.min(t, (0 - cx) / dir.x);
+    else if (dir.x > 0) t = Math.min(t, (width - cx) / dir.x);
+    if (dir.y < 0) t = Math.min(t, (0 - cy) / dir.y);
+    else if (dir.y > 0) t = Math.min(t, (height - cy) / dir.y);
+    const start = new PIXI.Point(cx + dir.x * t, cy + dir.y * t);
     const bullet = new PIXI.Graphics();
     bullet.beginFill(0xffffff);
     bullet.drawCircle(0, 0, 4);
@@ -199,7 +199,13 @@ export class MainScreen extends PIXI.Container {
   }
 
   applyHit(x, y, dmg) {
-    const r = this.radius * (0.08 + Math.random() * 0.04) * (dmg / 10);
+    const maxHp = store.state.planet.maxHp;
+    const baseRatio = 0.45;
+    const minRatio = 0.06;
+    const maxRatio = 0.45;
+    let ratio = baseRatio * Math.sqrt(dmg / maxHp);
+    ratio = Math.min(maxRatio, Math.max(minRatio, ratio));
+    const r = this.radius * ratio;
     const brush = BrushManager.get();
     if (this.planetMask.isValid()) {
       this.planetMask.cut(x, y, r, brush);
