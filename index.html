@@ -27,9 +27,16 @@
       aspect-ratio: 9 / 16;
       position: relative;
       margin: auto;
+      overflow: hidden;
       background: radial-gradient(circle at 50% 20%, #111, #000);
     }
-    #game-canvas, #ui-layer {
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    #game-canvas,
+    #ui-layer {
       position: absolute;
       inset: 0;
     }
@@ -41,7 +48,7 @@
 </head>
 <body>
   <div id="wrapper">
-    <canvas id="game-canvas"></canvas>
+    <div id="canvas-container"></div>
     <div id="ui-layer"></div>
   </div>
   <script type="module" src="/src/main.tsx"></script>

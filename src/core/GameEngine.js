@@ -4,8 +4,10 @@ import { StateManager } from './StateManager.js';
 
 export const store = new GameStateStore();
 
+const wrapper = document.getElementById('wrapper');
+
 export const app = new PIXI.Application({
-  resizeTo: window,
+  resizeTo: wrapper,
   backgroundColor: 0x000000,
   antialias: true,
 });

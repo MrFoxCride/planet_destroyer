@@ -11,7 +11,7 @@ const buttons = [
 
 export const BottomNavBar = () => {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 flex justify-around bg-gray-900/80 text-white z-50 pointer-events-auto py-2">
+    <nav className="absolute bottom-0 left-0 right-0 flex justify-around bg-gray-900/80 text-white z-50 pointer-events-auto py-2">
       {buttons.map((btn) => (
         <button
           key={btn.id}

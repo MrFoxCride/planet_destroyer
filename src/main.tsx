@@ -9,9 +9,11 @@ import { WeaponPanel } from './ui/WeaponPanel.tsx';
 import { RewardDustPopup } from './ui/RewardDustPopup.tsx';
 import { RewardCorePopup } from './ui/RewardCorePopup.tsx';
 
-const canvasElem = document.getElementById('game-canvas');
-canvasElem.replaceWith(app.view);
+const container = document.getElementById('canvas-container');
+container.appendChild(app.view);
 app.view.id = 'game-canvas';
+app.view.style.width = '100%';
+app.view.style.height = '100%';
 
 
 function UI() {
