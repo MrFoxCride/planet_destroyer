@@ -35,8 +35,10 @@ if (startSector && startSector.entities.length) {
 function UI() {
   const [dustReward, setDustReward] = React.useState<number | null>(null);
   const [coreReward, setCoreReward] = React.useState<number | null>(null);
+  const [extractionInfo, setExtractionInfo] = React.useState<any | null>(null);
   const [unlockId, setUnlockId] = React.useState<string | null>(null);
-  const [flyouts, setFlyouts] = React.useState<{ id: number; amount: number }[]>([]);
+  const [flyouts, setFlyouts] = React.useState<{ id: number; amount: number; idx: number }[]>([]);
+  const flyoutIndex = React.useRef(0);
 
   React.useEffect(() => {
     const dustCb = ({ amount, source }: any) => {
@@ -44,20 +46,38 @@ function UI() {
     };
     const flyoutCb = ({ amount }: any) => {
       const id = Date.now() + Math.random();
-      setFlyouts((f) => [...f, { id, amount }]);
-      setTimeout(() => setFlyouts((f) => f.filter((fl) => fl.id !== id)), 900);
+      const idx = flyoutIndex.current;
+      flyoutIndex.current = (flyoutIndex.current + 1) % 5;
+      setFlyouts((f) => [...f, { id, amount, idx }]);
+      setTimeout(() => {
+        setFlyouts((f) => f.filter((fl) => fl.id !== id));
+      }, 900);
     };
-    const coreCb = ({ amount }: any) => setCoreReward(amount);
+    const coreCb = ({ amount, source }: any) => {
+      if (source !== 'dispatch') setCoreReward(amount);
+    };
+    const extractionCb = (info: any) => {
+      const state = store.get();
+      if (
+        state.currentScreen === 'MainScreen' &&
+        state.planet.id === info.planetId
+      ) {
+        stateManager.goTo('SectorMap', { sectorId: info.sectorId });
+      }
+      setExtractionInfo(info);
+    };
     const uiCb = (s: any) => setUnlockId(s.ui.unlockSectorId);
     store.on('reward:dust', dustCb);
     store.on('reward:core', coreCb);
     store.on('update', uiCb);
     store.on('flyout', flyoutCb);
+    store.on('extraction:completed', extractionCb);
     return () => {
       store.off('reward:dust', dustCb);
       store.off('reward:core', coreCb);
       store.off('update', uiCb);
       store.off('flyout', flyoutCb);
+      store.off('extraction:completed', extractionCb);
     };
   }, []);
 
@@ -70,13 +90,23 @@ function UI() {
       <GalaxyButton />
       <PlanetActionModal />
       {flyouts.map((f) => (
-        <DustFlyout key={f.id} amount={f.amount} />
+        <DustFlyout key={f.id} amount={f.amount} index={f.idx} />
       ))}
       {dustReward !== null && (
         <RewardDustPopup amount={dustReward} onClose={() => setDustReward(null)} />
       )}
       {coreReward !== null && (
         <RewardCorePopup amount={coreReward} onClose={() => setCoreReward(null)} />
+      )}
+      {extractionInfo && (
+        <RewardCorePopup
+          amount={extractionInfo.amount}
+          planetName={extractionInfo.name}
+          onClose={() => {
+            store.removePlanet(extractionInfo.sectorId, extractionInfo.planetId);
+            setExtractionInfo(null);
+          }}
+        />
       )}
       {unlockId && (
         <UnlockSectorModal
