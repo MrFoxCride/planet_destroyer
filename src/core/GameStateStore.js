@@ -1,6 +1,10 @@
 export class GameStateStore {
   constructor() {
-    this.state = {};
+    // runtime navigation state stored here
+    this.state = {
+      currentScreen: null,
+      navStack: [],
+    };
     this.listeners = new Map();
   }
 
