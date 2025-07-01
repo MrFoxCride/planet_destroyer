@@ -121,6 +121,5 @@ Dust Reward Popup is a generic confirmation overlay shown when the player earns 
 ---
 
 ## 7. Dependencies
-- Asset: `/assets/ui/reward_dust_icon.webp`
 - VFX: `vfx.confetti.medium` (optional)
 - OverlayManager, EventLogger, GameStateStore
