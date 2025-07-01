@@ -39,7 +39,7 @@ function UI() {
 
   React.useEffect(() => {
     const dustCb = ({ amount, source }: any) => {
-      if (source !== 'attack') setDustReward(amount);
+      if (source !== 'attack' && source !== 'colonyTap') setDustReward(amount);
     };
     const flyoutCb = ({ amount }: any) => {
       const id = Date.now() + Math.random();

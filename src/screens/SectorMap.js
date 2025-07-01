@@ -93,6 +93,16 @@ export class SectorMap extends PIXI.Container {
       label.x = x;
       label.y = y - radius - 4;
       this.mapLayer.addChild(label);
+
+      if (ent.colony) {
+        const icon = PIXI.Sprite.from('/assets/ui/icon-colony.svg');
+        icon.anchor.set(0.5);
+        icon.width = 24;
+        icon.height = 24;
+        icon.x = label.x - label.width / 2 - 14;
+        icon.y = label.y;
+        this.mapLayer.addChild(icon);
+      }
     });
   }
 
