@@ -9,6 +9,7 @@ export class MainScreen extends PIXI.Container {
 
     const { width, height } = app.renderer;
     this.radius = Math.max(width * 0.28, 114);
+    this.app = app;
 
     this.planetContainer = new PIXI.Container();
     this.planetContainer.x = width / 2;
@@ -18,15 +19,32 @@ export class MainScreen extends PIXI.Container {
     PIXI.Ticker.shared.add(this.animateIn, this);
     this.addChild(this.planetContainer);
 
+    this.projectileLayer = new PIXI.Container();
+    this.addChild(this.projectileLayer);
+
     this.glow = new PIXI.Graphics();
     this.glow.beginFill(0x6666ff, 0.4);
-    this.glow.drawCircle(0, 0, this.radius * 1.5);
+    this.glow.drawCircle(0, 0, this.radius * 1.2);
     this.glow.endFill();
-    this.glow.filters = [new PIXI.filters.BlurFilter(12)];
+    this.glow.filters = [new PIXI.filters.BlurFilter(8)];
     this.planetContainer.addChild(this.glow);
+    this.glowPulse = 0;
+    PIXI.Ticker.shared.add(this.pulseGlow, this);
 
-    this.planetGraphic = new PIXI.Graphics();
-    this.planetContainer.addChild(this.planetGraphic);
+    this.core = new PIXI.Graphics();
+    this.core.beginFill(0xffaa33);
+    this.core.drawCircle(0, 0, this.radius * 0.6);
+    this.core.endFill();
+    this.planetContainer.addChild(this.core);
+
+    this.surface = new PIXI.Graphics();
+    this.destructionMask = new PIXI.Graphics();
+    this.destructionMask.beginFill(0xffffff);
+    this.destructionMask.drawCircle(0, 0, this.radius);
+    this.destructionMask.endFill();
+    this.surface.mask = this.destructionMask;
+    this.planetContainer.addChild(this.surface);
+    this.planetContainer.addChild(this.destructionMask);
 
     this.hpBg = new PIXI.Graphics();
     this.hpBg.beginFill(0x222222, 0.8);
@@ -51,8 +69,8 @@ export class MainScreen extends PIXI.Container {
     this.planetContainer.eventMode = 'static';
     this.planetContainer.cursor = 'pointer';
     this.planetContainer.on('pointertap', () => {
-      weaponSystem.fire();
-      this.bump();
+      const dmg = weaponSystem.fire();
+      if (dmg) this.launchProjectile(dmg);
     });
 
     this.updateView(store.get());
@@ -62,13 +80,25 @@ export class MainScreen extends PIXI.Container {
 
   updateView(state) {
     const p = state.planet;
-    this.planetGraphic.clear();
-    this.planetGraphic.beginFill(p.destroyed ? 0x555555 : 0x8888ff);
-    this.planetGraphic.drawCircle(0, 0, this.radius);
-    this.planetGraphic.endFill();
+    if (p.hp === p.maxHp && !p.destroyed) {
+      this.destructionMask.clear();
+      this.destructionMask.beginFill(0xffffff);
+      this.destructionMask.drawCircle(0, 0, this.radius);
+      this.destructionMask.endFill();
+    }
+    this.surface.clear();
+    const points = [];
+    for (let i = 0; i < 30; i++) {
+      const a = (i / 30) * Math.PI * 2;
+      const r = this.radius * (0.95 + Math.random() * 0.05);
+      points.push(Math.cos(a) * r, Math.sin(a) * r);
+    }
+    this.surface.beginFill(p.destroyed ? 0x555555 : 0x8888ff);
+    this.surface.drawPolygon(points);
+    this.surface.endFill();
     this.glow.clear();
     this.glow.beginFill(p.destroyed ? 0x444444 : 0x6666ff, 0.4);
-    this.glow.drawCircle(0, 0, this.radius * 1.5);
+    this.glow.drawCircle(0, 0, this.radius * 1.2);
     this.glow.endFill();
 
     const ratio = p.hp / p.maxHp;
@@ -83,6 +113,8 @@ export class MainScreen extends PIXI.Container {
 
   destroy(opts) {
     store.off('update', this.listener);
+    PIXI.Ticker.shared.remove(this.animateIn, this);
+    PIXI.Ticker.shared.remove(this.pulseGlow, this);
     super.destroy(opts);
   }
 
@@ -98,18 +130,59 @@ export class MainScreen extends PIXI.Container {
     }
   }
 
-  bump() {
-    this.planetContainer.scale.set(1.1);
-    PIXI.Ticker.shared.add(this.restoreScale, this);
+  pulseGlow(delta) {
+    this.glowPulse += delta / (60 * 1.3) * Math.PI * 2;
+    this.glow.alpha = 0.3 + 0.1 * Math.sin(this.glowPulse);
   }
 
-  restoreScale(delta) {
-    const s = this.planetContainer.scale.x - 0.1 * delta;
-    if (s <= 1) {
-      this.planetContainer.scale.set(1);
-      PIXI.Ticker.shared.remove(this.restoreScale, this);
+  launchProjectile(dmg) {
+    const { width, height } = this.app.renderer;
+    const side = Math.floor(Math.random() * 4);
+    const start = new PIXI.Point();
+    if (side === 0) {
+      start.set(0, Math.random() * height);
+    } else if (side === 1) {
+      start.set(width, Math.random() * height);
+    } else if (side === 2) {
+      start.set(Math.random() * width, 0);
     } else {
-      this.planetContainer.scale.set(s);
+      start.set(Math.random() * width, height);
     }
+    const angle = Math.random() * Math.PI * 2;
+    const localHit = new PIXI.Point(
+      Math.cos(angle) * this.radius,
+      Math.sin(angle) * this.radius
+    );
+    const globalHit = this.planetContainer.toGlobal(localHit);
+    const bullet = new PIXI.Graphics();
+    bullet.beginFill(0xffffff);
+    bullet.drawCircle(0, 0, 4);
+    bullet.endFill();
+    bullet.position.copyFrom(start);
+    this.projectileLayer.addChild(bullet);
+    const duration = 200 + Math.random() * 100;
+    const startTime = performance.now();
+    const tick = () => {
+      const t = Math.min((performance.now() - startTime) / duration, 1);
+      bullet.x = start.x + (globalHit.x - start.x) * t;
+      bullet.y = start.y + (globalHit.y - start.y) * t;
+      if (t >= 1) {
+        PIXI.Ticker.shared.remove(tick);
+        bullet.destroy();
+        this.applyHit(localHit.x, localHit.y, dmg);
+      }
+    };
+    PIXI.Ticker.shared.add(tick);
   }
+
+  applyHit(x, y, dmg) {
+    const base = this.radius * 0.1;
+    const r = base * (dmg / 10);
+    this.destructionMask.beginHole();
+    this.destructionMask.drawCircle(x, y, r);
+    this.destructionMask.endHole();
+    weaponSystem.applyHit(dmg);
+  }
+
+  // no bump animation in new attack flow
 }

@@ -18,12 +18,16 @@ class WeaponSystem {
   }
 
   fire() {
-    if (this.weapon.ammo <= 0) return false;
-    if (store.state.planet.destroyed) return false;
+    if (this.weapon.ammo <= 0) return 0;
+    if (store.state.planet.destroyed) return 0;
     this.weapon.ammo -= 1;
-    store.damagePlanet(this.weapon.damage);
+    store.emit('update', store.state);
+    return this.weapon.damage;
+  }
+
+  applyHit(damage) {
+    store.damagePlanet(damage);
     store.addDust(1, 'attack');
-    return true;
   }
 
   addAmmo(amount) {

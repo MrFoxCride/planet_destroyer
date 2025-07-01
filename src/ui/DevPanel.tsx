@@ -1,6 +1,7 @@
 import React from 'react';
 import { isProd } from '../data/BuildFlags.js';
 import { stateManager, store } from '../core/GameEngine.js';
+import { weaponSystem } from '../core/WeaponSystem.js';
 
 const screens = ['MainScreen', 'GalaxyMap', 'Profile', 'Store', 'Earn', 'Friends'];
 
@@ -36,6 +37,18 @@ export const DevPanel = () => {
               onClick={() => store.resetPlanet()}
             >
               Reset HP
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => weaponSystem.addAmmo(10)}
+            >
+              Add ammo
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.damagePlanet(store.state.planet.hp)}
+            >
+              Destroy planet
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"

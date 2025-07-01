@@ -10,6 +10,7 @@ export class GameStateStore {
         maxHp: 100,
         destroyed: false,
         coreExtractable: false,
+        dustSinceSpawn: 0,
       },
       resources: {
         dust: 0,
@@ -46,7 +47,11 @@ export class GameStateStore {
 
   addDust(amount, source = 'attack') {
     this.state.resources.dust += amount;
-    this.emit('reward:dust', { amount, source });
+    if (source === 'attack') {
+      this.state.planet.dustSinceSpawn += amount;
+    } else {
+      this.emit('reward:dust', { amount, source });
+    }
     this.emit('update', this.state);
   }
 
@@ -64,6 +69,13 @@ export class GameStateStore {
       p.hp = 0;
       p.destroyed = true;
       p.coreExtractable = true;
+      if (p.dustSinceSpawn > 0) {
+        this.emit('reward:dust', {
+          amount: p.dustSinceSpawn,
+          source: 'planet_destroy',
+        });
+        p.dustSinceSpawn = 0;
+      }
     }
     this.emit('update', this.state);
   }
@@ -73,6 +85,7 @@ export class GameStateStore {
     p.hp = p.maxHp;
     p.destroyed = false;
     p.coreExtractable = false;
+    p.dustSinceSpawn = 0;
     this.emit('update', this.state);
   }
 }
