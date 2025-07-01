@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { store } from '../core/GameEngine.js';
+import { weaponSystem } from '../core/WeaponSystem.js';
 
 export class MainScreen extends PIXI.Container {
   constructor(app) {
@@ -29,6 +30,12 @@ export class MainScreen extends PIXI.Container {
     this.nameLabel.anchor.set(0.5);
     this.nameLabel.y = -110;
     this.planetContainer.addChild(this.nameLabel);
+
+    this.planetContainer.eventMode = 'static';
+    this.planetContainer.cursor = 'pointer';
+    this.planetContainer.on('pointertap', () => {
+      weaponSystem.fire();
+    });
 
     this.updateView(store.get());
     this.listener = (state) => this.updateView(state);
