@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { app, stateManager, store } from './core/GameEngine.js';
 import { sectors as defaultSectors } from './data/galaxy.js';
+import { planetNames } from './data/planetNames.js';
 import { DevPanel } from './ui/DevPanel.tsx';
 import { BottomNavBar } from './ui/BottomNavBar.tsx';
 import { CurrencyHUD } from './ui/CurrencyHUD.tsx';
@@ -19,7 +20,12 @@ app.view.style.width = '100%';
 app.view.style.height = '100%';
 
 // initialize galaxy sectors once
+store.initNamePool(planetNames);
 store.initSectors(defaultSectors);
+const startSector = store.get().sectors.find((s) => s.unlocked);
+if (startSector && startSector.entities.length) {
+  store.selectPlanet(startSector.entities[0]);
+}
 
 
 function UI() {
