@@ -42,6 +42,10 @@ export class MainScreen extends PIXI.Container {
     this.surface = new PIXI.Graphics();
     this.planetMask = new PlanetMask(this.radius);
     if (this.planetMask.isValid()) {
+      console.log(
+        'PlanetMask visible area',
+        this.planetMask.totalArea - this.planetMask.removedArea
+      );
       this.surface.mask = this.planetMask.sprite;
       this.planetContainer.addChild(this.planetMask.sprite);
       this.planetMask.sprite.renderable = false;
