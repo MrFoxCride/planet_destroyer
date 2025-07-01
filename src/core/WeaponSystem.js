@@ -31,10 +31,7 @@ class WeaponSystem {
   }
 
   addAmmo(amount) {
-    this.weapon.ammo = Math.min(
-      this.weapon.ammo + amount,
-      this.weapon.ammoMax
-    );
+    this.weapon.ammo += amount;
     store.emit('update', store.state);
   }
 }

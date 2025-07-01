@@ -86,16 +86,13 @@ export class MainScreen extends PIXI.Container {
       this.destructionMask.drawCircle(0, 0, this.radius);
       this.destructionMask.endFill();
     }
+    this.surface.visible = !p.destroyed;
     this.surface.clear();
-    const points = [];
-    for (let i = 0; i < 30; i++) {
-      const a = (i / 30) * Math.PI * 2;
-      const r = this.radius * (0.95 + Math.random() * 0.05);
-      points.push(Math.cos(a) * r, Math.sin(a) * r);
+    if (!p.destroyed) {
+      this.surface.beginFill(0x8888ff);
+      this.surface.drawCircle(0, 0, this.radius);
+      this.surface.endFill();
     }
-    this.surface.beginFill(p.destroyed ? 0x555555 : 0x8888ff);
-    this.surface.drawPolygon(points);
-    this.surface.endFill();
     this.glow.clear();
     this.glow.beginFill(p.destroyed ? 0x444444 : 0x6666ff, 0.4);
     this.glow.drawCircle(0, 0, this.radius * 1.2);
@@ -176,8 +173,7 @@ export class MainScreen extends PIXI.Container {
   }
 
   applyHit(x, y, dmg) {
-    const base = this.radius * 0.1;
-    const r = base * (dmg / 10);
+    const r = this.radius * (0.08 + Math.random() * 0.04) * (dmg / 10);
     this.destructionMask.beginHole();
     this.destructionMask.drawCircle(x, y, r);
     this.destructionMask.endHole();
