@@ -50,6 +50,16 @@ This project is a fully modular and scalable boilerplate for creating swipe-base
 - Каждый `screen-*.md` содержит описание одного игрового экрана.
 - Перед реализацией всегда анализируй UI Elements и Logic отдельно.
 
+## ASSET PIPELINE CONSTRAINTS
+- Codex и любые AI-агенты не имеют права генерировать, добавлять или менять бинарные ассеты (изображения, звуки, спрайты, видео) в репозитории через auto-PR или генерацию.
+- Codex генерирует только:
+  - плейсхолдеры для ассетов,
+  - корректные имена файлов,
+  - ссылки и entries в manifest-файлах (assets.json и аналоги).
+- Все бинарные ассеты (sprites, иконки, анимации, VFX, SFX) всегда интегрируются вручную, отдельным коммитом, после генерации плейсхолдеров.
+- Финальная подмена плейсхолдеров на реальные ассеты производится только вручную, без участия Codex.
+- Любая попытка AI сгенерировать или затронуть бинарный файл — это ошибка пайплайна и должна быть отклонена на уровне review/CI.
+
 ## GAME SCREENS
 Each game screen is a separate class extending `PIXI.Container`, stored in `src/screens/`.
 Screens are loaded via `Manager.changeState(screenName)`.
