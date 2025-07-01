@@ -15,6 +15,7 @@ import { UnlockSectorModal } from './ui/UnlockSectorModal.tsx';
 import { PlanetActionModal } from './ui/PlanetActionModal.tsx';
 import { ColonyPanel } from './ui/ColonyPanel.tsx';
 import { DustFlyout } from './ui/DustFlyout.tsx';
+import { ExtractionPanel } from './ui/ExtractionPanel.tsx';
 
 const container = document.getElementById('canvas-container');
 container.appendChild(app.view);
@@ -64,6 +65,7 @@ function UI() {
     <div className="absolute inset-0 flex flex-col justify-between items-center pointer-events-none">
       <CurrencyHUD />
       <WeaponPanel />
+      <ExtractionPanel />
       <ColonyPanel />
       <GalaxyButton />
       <PlanetActionModal />
@@ -97,6 +99,7 @@ stateManager.goTo('MainScreen');
 setInterval(() => {
   dispatchSystem.update();
   colonySystem.update();
+  store.updateExtractions();
 }, 1000);
 
 // expose for debugging

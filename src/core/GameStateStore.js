@@ -10,12 +10,14 @@ export class GameStateStore {
         maxHp: 100,
         destroyed: false,
         coreExtractable: false,
-        dustSinceSpawn: 0,
         colony: false,
         choiceMade: false,
+        dustSinceSpawn: 0,
         dustPerHour: 50,
         storedDust: 0,
         lastIncomeAt: 0,
+        status: 'new',
+        extraction: null,
       },
       resources: {
         dust: 0,
@@ -110,6 +112,8 @@ export class GameStateStore {
       p.hp = 0;
       p.destroyed = true;
       p.coreExtractable = true;
+      p.status = 'destroyed';
+      p.extraction = null;
       if (p.dustSinceSpawn > 0) {
         this.emit('reward:dust', {
           amount: p.dustSinceSpawn,
@@ -126,7 +130,10 @@ export class GameStateStore {
     p.hp = p.maxHp;
     p.destroyed = false;
     p.coreExtractable = false;
+    p.colony = false;
     p.dustSinceSpawn = 0;
+    p.status = 'new';
+    p.extraction = null;
     this.emit('update', this.state);
   }
 
@@ -150,6 +157,8 @@ export class GameStateStore {
     p.coreExtractable = false;
     p.storedDust = 0;
     p.lastIncomeAt = Date.now();
+    p.status = 'colony';
+    p.extraction = null;
     this.emit('update', this.state);
   }
 
@@ -178,11 +187,24 @@ export class GameStateStore {
     return amount;
   }
 
+  startExtraction(duration = 10000) {
+    const p = this.state.planet;
+    if (p.status !== 'destroyed') return false;
+    p.status = 'extracting';
+    p.coreExtractable = false;
+    p.extraction = { startedAt: Date.now(), duration };
+    this.emit('update', this.state);
+    return true;
+  }
+
   collectCore() {
     const p = this.state.planet;
-    if (!p.coreExtractable) return false;
+    if (p.status !== 'extracting' || !p.extraction) return false;
+    const now = Date.now();
+    if (now < p.extraction.startedAt + p.extraction.duration) return false;
     this.addCore(1, 'dispatch');
-    p.coreExtractable = false;
+    p.status = 'empty';
+    p.extraction = null;
     this.emit('update', this.state);
     return true;
   }
@@ -213,6 +235,8 @@ export class GameStateStore {
             dustPerHour: 50,
             storedDust: 0,
             lastIncomeAt: 0,
+            status: 'new',
+            extraction: null,
             surfaceColor: surface,
             glowColor: glow,
           });
@@ -264,6 +288,25 @@ export class GameStateStore {
     };
     const glow = lighten(base, 1.3);
     return { surface, glow };
+  }
+
+  updateExtractions() {
+    const now = Date.now();
+    let changed = false;
+    this.state.sectors.forEach((sector) => {
+      sector.entities.forEach((p) => {
+        if (p.status === 'extracting' && p.extraction) {
+          if (now >= p.extraction.startedAt + p.extraction.duration) {
+            this.addCore(1, 'dispatch');
+            p.status = 'empty';
+            p.extraction = null;
+            p.coreExtractable = false;
+            changed = true;
+          }
+        }
+      });
+    });
+    if (changed) this.emit('update', this.state);
   }
 
   openUnlockModal(id) {

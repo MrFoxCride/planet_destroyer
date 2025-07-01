@@ -37,7 +37,7 @@ export const DevPanel = () => {
               className="bg-blue-500 px-2 py-1 mt-1"
               onClick={() => store.resetPlanet()}
             >
-              Reset HP
+              Reset Planet
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
@@ -59,25 +59,21 @@ export const DevPanel = () => {
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
-              onClick={() => {
-                const scr: any = stateManager.current;
-                if (scr && typeof scr.killPlanet === 'function') {
-                  scr.killPlanet();
-                } else {
-                  store.damagePlanet(store.state.planet.hp);
-                }
-              }}
+              onClick={() => store.damagePlanet(store.state.planet.hp)}
             >
-              Instant Kill
+              Force Destroy
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
-              onClick={() => {
-                store.addCore(1, 'dev');
-                store.resetPlanet();
-              }}
+              onClick={() => store.chooseColonize()}
             >
-              Instant Dispatch
+              Force Colonize
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.startExtraction(1000)}
+            >
+              Force Extract
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"

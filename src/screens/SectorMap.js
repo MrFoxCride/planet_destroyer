@@ -77,7 +77,13 @@ export class SectorMap extends PIXI.Container {
       this.mapLayer.addChild(glow);
 
       const g = new PIXI.Graphics();
-      g.beginFill(ent.surfaceColor);
+      let color = ent.surfaceColor;
+      if (ent.status === 'destroyed' || ent.status === 'extracting') {
+        color = 0x666666;
+      } else if (ent.status === 'empty') {
+        color = 0x333333;
+      }
+      g.beginFill(color);
       g.drawCircle(0, 0, radius);
       g.endFill();
       g.x = x;
