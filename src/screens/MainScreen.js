@@ -8,10 +8,14 @@ export class MainScreen extends PIXI.Container {
     this.screenId = 'MainScreen';
 
     const { width, height } = app.renderer;
+    this.radius = Math.max(width * 0.28, 114);
 
     this.planetContainer = new PIXI.Container();
     this.planetContainer.x = width / 2;
-    this.planetContainer.y = height * 0.4;
+    this.planetContainer.y = height / 2;
+    this.planetContainer.alpha = 0;
+    this.planetContainer.scale.set(0.8);
+    PIXI.Ticker.shared.add(this.animateIn, this);
     this.addChild(this.planetContainer);
 
     this.planetGraphic = new PIXI.Graphics();
@@ -19,16 +23,16 @@ export class MainScreen extends PIXI.Container {
 
     this.hpBg = new PIXI.Graphics();
     this.hpBg.beginFill(0x333333);
-    this.hpBg.drawRect(-80, -90, 160, 10);
+    this.hpBg.drawRect(-this.radius, -this.radius - 20, this.radius * 2, 12);
     this.hpBg.endFill();
     this.planetContainer.addChild(this.hpBg);
 
     this.hpBar = new PIXI.Graphics();
     this.planetContainer.addChild(this.hpBar);
 
-    this.nameLabel = new PIXI.Text('', { fill: 'white', fontSize: 14 });
+    this.nameLabel = new PIXI.Text('', { fill: 'white', fontSize: 20 });
     this.nameLabel.anchor.set(0.5);
-    this.nameLabel.y = -110;
+    this.nameLabel.y = -this.radius - 40;
     this.planetContainer.addChild(this.nameLabel);
 
     this.planetContainer.eventMode = 'static';
@@ -46,13 +50,13 @@ export class MainScreen extends PIXI.Container {
     const p = state.planet;
     this.planetGraphic.clear();
     this.planetGraphic.beginFill(p.destroyed ? 0x555555 : 0x8888ff);
-    this.planetGraphic.drawCircle(0, 0, 70);
+    this.planetGraphic.drawCircle(0, 0, this.radius);
     this.planetGraphic.endFill();
 
     const ratio = p.hp / p.maxHp;
     this.hpBar.clear();
     this.hpBar.beginFill(0xff4444);
-    this.hpBar.drawRect(-80, -90, 160 * ratio, 10);
+    this.hpBar.drawRect(-this.radius, -this.radius - 20, this.radius * 2 * ratio, 12);
     this.hpBar.endFill();
 
     this.nameLabel.text = p.name;
@@ -61,5 +65,17 @@ export class MainScreen extends PIXI.Container {
   destroy(opts) {
     store.off('update', this.listener);
     super.destroy(opts);
+  }
+
+  animateIn(delta) {
+    const s = this.planetContainer.scale.x + 0.05 * delta;
+    if (s >= 1) {
+      this.planetContainer.scale.set(1);
+      this.planetContainer.alpha = 1;
+      PIXI.Ticker.shared.remove(this.animateIn, this);
+    } else {
+      this.planetContainer.scale.set(s);
+      this.planetContainer.alpha = s;
+    }
   }
 }

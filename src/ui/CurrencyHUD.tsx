@@ -11,18 +11,18 @@ export const CurrencyHUD = () => {
   }, []);
 
   return (
-    <div className="absolute top-0 left-0 right-0 flex justify-between px-4 py-2 bg-black/60 text-white text-lg pointer-events-auto">
-      <div className="flex items-center gap-x-1">
-        <img src="/assets/ui/icon-dust.svg" className="w-6 h-6" />
-        <span>{res.dust}</span>
+    <div className="absolute top-0 left-0 right-0 flex justify-center gap-6 px-4 py-3 bg-black/60 text-white pointer-events-auto items-center rounded-b animate-fadeIn">
+      <div className="flex items-center gap-x-2">
+        <img src="/assets/ui/icon-dust.svg" className="w-8 h-8" />
+        <span className="text-base">{res.dust}</span>
       </div>
-      <div className="flex items-center gap-x-1">
-        <img src="/assets/ui/icon-core.svg" className="w-6 h-6" />
-        <span>{res.cores}</span>
+      <div className="flex items-center gap-x-2">
+        <img src="/assets/ui/icon-core.svg" className="w-8 h-8" />
+        <span className="text-base">{res.cores}</span>
       </div>
-      <div className="flex items-center gap-x-1">
-        <img src="/assets/ui/icon-magmaton.svg" className="w-6 h-6" />
-        <span>{res.magmaton}</span>
+      <div className="flex items-center gap-x-2">
+        <img src="/assets/ui/icon-magmaton.svg" className="w-8 h-8" />
+        <span className="text-base">{res.magmaton}</span>
       </div>
     </div>
   );
