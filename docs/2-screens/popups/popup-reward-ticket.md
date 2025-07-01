@@ -53,6 +53,5 @@ Ticket Reward Popup is shown when the player receives a Wheel of Fortune ticket 
 ---
 
 ## 7. Dependencies
-- Asset: `/assets/ui/reward_ticket_icon.webp`
 - VFX: `vfx.glow.soft` (optional)
 - OverlayManager, GameStateStore, WheelSystem, EventLogger
