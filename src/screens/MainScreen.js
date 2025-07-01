@@ -162,28 +162,46 @@ export class MainScreen extends PIXI.Container {
 
   launchProjectile(dmg) {
     const { width, height } = this.app.renderer;
-    const theta = Math.random() * Math.PI * 2;
-    const localHit = new PIXI.Point(
-      Math.cos(theta) * this.radius,
-      Math.sin(theta) * this.radius
-    );
-    const globalHit = this.planetContainer.toGlobal(localHit);
-    const dir = new PIXI.Point(Math.cos(theta) * -1, Math.sin(theta) * -1);
     const cx = this.planetContainer.x;
     const cy = this.planetContainer.y;
-    let t = Infinity;
-    if (dir.x < 0) t = Math.min(t, (0 - cx) / dir.x);
-    else if (dir.x > 0) t = Math.min(t, (width - cx) / dir.x);
-    if (dir.y < 0) t = Math.min(t, (0 - cy) / dir.y);
-    else if (dir.y > 0) t = Math.min(t, (height - cy) / dir.y);
-    const start = new PIXI.Point(cx + dir.x * t, cy + dir.y * t);
+
+    // random spawn on wrapper edges
+    const edge = Math.floor(Math.random() * 4);
+    let sx = 0;
+    let sy = 0;
+    if (edge === 0) {
+      sx = Math.random() * width;
+      sy = 0;
+    } else if (edge === 1) {
+      sx = width;
+      sy = Math.random() * height;
+    } else if (edge === 2) {
+      sx = Math.random() * width;
+      sy = height;
+    } else {
+      sx = 0;
+      sy = Math.random() * height;
+    }
+    const start = new PIXI.Point(sx, sy);
+
+    // nearest point on planet circle to spawn
+    const vecX = sx - cx;
+    const vecY = sy - cy;
+    const vecLen = Math.sqrt(vecX * vecX + vecY * vecY) || 1;
+    const hitX = cx + (vecX / vecLen) * this.radius;
+    const hitY = cy + (vecY / vecLen) * this.radius;
+    const globalHit = new PIXI.Point(hitX, hitY);
+    const localHit = this.planetContainer.toLocal(globalHit);
     const bullet = new PIXI.Graphics();
     bullet.beginFill(0xffffff);
     bullet.drawCircle(0, 0, 4);
     bullet.endFill();
     bullet.position.copyFrom(start);
     this.projectileLayer.addChild(bullet);
-    const duration = 200 + Math.random() * 100;
+
+    const dist = Math.hypot(globalHit.x - start.x, globalHit.y - start.y);
+    const speed = 1200; // pixels per second
+    const duration = (dist / speed) * 1000;
     const startTime = performance.now();
     const tick = () => {
       const t = Math.min((performance.now() - startTime) / duration, 1);
