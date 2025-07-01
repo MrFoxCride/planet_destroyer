@@ -17,6 +17,10 @@ export class GameStateStore {
         cores: 0,
         magmaton: 0,
       },
+      sectors: [],
+      ui: {
+        unlockSectorId: null,
+      },
     };
     this.listeners = new Map();
   }
@@ -86,6 +90,37 @@ export class GameStateStore {
     p.destroyed = false;
     p.coreExtractable = false;
     p.dustSinceSpawn = 0;
+    this.emit('update', this.state);
+  }
+
+  initSectors(list) {
+    this.state.sectors = list.map((s) => ({ ...s }));
+    this.emit('update', this.state);
+  }
+
+  openUnlockModal(id) {
+    this.state.ui.unlockSectorId = id;
+    this.emit('update', this.state);
+  }
+
+  closeUnlockModal() {
+    this.state.ui.unlockSectorId = null;
+    this.emit('update', this.state);
+  }
+
+  unlockSector(id) {
+    const sector = this.state.sectors.find((s) => s.id === id);
+    if (!sector || sector.unlocked) return false;
+    if (this.state.resources.dust < sector.cost) return false;
+    this.state.resources.dust -= sector.cost;
+    sector.unlocked = true;
+    this.state.ui.unlockSectorId = null;
+    this.emit('update', this.state);
+    return true;
+  }
+
+  unlockAllSectors() {
+    this.state.sectors.forEach((s) => (s.unlocked = true));
     this.emit('update', this.state);
   }
 }
