@@ -19,7 +19,8 @@ class WeaponSystem {
 
   fire() {
     if (this.weapon.ammo <= 0) return 0;
-    if (store.state.planet.destroyed) return 0;
+    const p = store.state.planet;
+    if (p.destroyed || p.colony || !p.choiceMade) return 0;
     this.weapon.ammo -= 1;
     store.emit('update', store.state);
     return this.weapon.damage;

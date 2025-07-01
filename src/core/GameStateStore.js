@@ -11,6 +11,11 @@ export class GameStateStore {
         destroyed: false,
         coreExtractable: false,
         dustSinceSpawn: 0,
+        colony: false,
+        choiceMade: false,
+        dustPerHour: 50,
+        storedDust: 0,
+        lastIncomeAt: 0,
       },
       resources: {
         dust: 0,
@@ -125,6 +130,50 @@ export class GameStateStore {
     this.emit('update', this.state);
   }
 
+  load(data) {
+    this.state = data;
+    this.emit('update', this.state);
+  }
+
+  chooseDestroy() {
+    const p = this.state.planet;
+    p.choiceMade = true;
+    this.emit('update', this.state);
+  }
+
+  chooseColonize() {
+    const p = this.state.planet;
+    p.choiceMade = true;
+    p.colony = true;
+    p.destroyed = false;
+    p.hp = p.maxHp;
+    p.coreExtractable = false;
+    p.storedDust = 0;
+    p.lastIncomeAt = Date.now();
+    this.emit('update', this.state);
+  }
+
+  collectColonyDust() {
+    const p = this.state.planet;
+    if (!p.colony) return 0;
+    const amount = Math.floor(p.storedDust || 0);
+    if (amount <= 0) return 0;
+    p.storedDust -= amount;
+    p.lastCollectionAt = Date.now();
+    this.addDust(amount, 'colony');
+    this.emit('update', this.state);
+    return amount;
+  }
+
+  collectCore() {
+    const p = this.state.planet;
+    if (!p.coreExtractable) return false;
+    this.addCore(1, 'dispatch');
+    p.coreExtractable = false;
+    this.emit('update', this.state);
+    return true;
+  }
+
   initSectors(list) {
     const used = new Set();
     this.state.sectors = list.map((s) => {
@@ -147,6 +196,10 @@ export class GameStateStore {
             coreExtractable: false,
             dustSinceSpawn: 0,
             colony: false,
+            choiceMade: false,
+            dustPerHour: 50,
+            storedDust: 0,
+            lastIncomeAt: 0,
             surfaceColor: surface,
             glowColor: glow,
           });
@@ -226,3 +279,4 @@ export class GameStateStore {
     this.emit('update', this.state);
   }
 }
+

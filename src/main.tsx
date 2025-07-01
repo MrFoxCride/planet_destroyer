@@ -1,7 +1,7 @@
 import './style.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { app, stateManager, store, dispatchSystem, nebulaSystem } from './core/GameEngine.js';
+import { app, stateManager, store, dispatchSystem, nebulaSystem, colonySystem } from './core/GameEngine.js';
 import { sectors as defaultSectors } from './data/galaxy.js';
 import { planetNames } from './data/planetNames.js';
 import { DevPanel } from './ui/DevPanel.tsx';
@@ -12,6 +12,8 @@ import { GalaxyButton } from './ui/GalaxyButton.tsx';
 import { RewardDustPopup } from './ui/RewardDustPopup.tsx';
 import { RewardCorePopup } from './ui/RewardCorePopup.tsx';
 import { UnlockSectorModal } from './ui/UnlockSectorModal.tsx';
+import { PlanetActionModal } from './ui/PlanetActionModal.tsx';
+import { ColonyPanel } from './ui/ColonyPanel.tsx';
 
 const container = document.getElementById('canvas-container');
 container.appendChild(app.view);
@@ -53,7 +55,9 @@ function UI() {
     <div className="absolute inset-0 flex flex-col justify-between items-center pointer-events-none">
       <CurrencyHUD />
       <WeaponPanel />
+      <ColonyPanel />
       <GalaxyButton />
+      <PlanetActionModal />
       {dustReward !== null && (
         <RewardDustPopup amount={dustReward} onClose={() => setDustReward(null)} />
       )}
@@ -80,6 +84,7 @@ stateManager.goTo('MainScreen');
 
 setInterval(() => {
   dispatchSystem.update();
+  colonySystem.update();
 }, 1000);
 
 // expose for debugging

@@ -110,9 +110,19 @@ export class MainScreen extends PIXI.Container {
 
     const ratio = p.hp / p.maxHp;
     this.hpBar.clear();
-    this.hpBar.beginFill(0xff4444);
-    this.hpBar.drawRoundedRect(-this.radius, -this.radius - 24, this.radius * 2 * ratio, 16, 8);
-    this.hpBar.endFill();
+    if (!p.colony) {
+      this.hpBar.beginFill(0xff4444);
+      this.hpBar.drawRoundedRect(
+        -this.radius,
+        -this.radius - 24,
+        this.radius * 2 * ratio,
+        16,
+        8
+      );
+      this.hpBar.endFill();
+    }
+    this.hpBg.visible = !p.colony;
+    this.hpText.visible = !p.colony;
     this.hpText.text = `${p.hp}/${p.maxHp}`;
 
     this.nameLabel.text = p.name;
