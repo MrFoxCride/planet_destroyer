@@ -13,8 +13,6 @@ const canvasElem = document.getElementById('game-canvas');
 canvasElem.replaceWith(app.view);
 app.view.id = 'game-canvas';
 
-document.body.appendChild(app.view);
-
 
 function UI() {
   const [dustReward, setDustReward] = React.useState<number | null>(null);
