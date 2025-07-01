@@ -19,9 +19,9 @@ export const WeaponPanel = () => {
 
   return (
     <div className="absolute bottom-16 left-0 right-0 flex flex-col items-center gap-y-4 pb-6 pointer-events-auto animate-fadeIn">
-      <div className="flex items-center gap-x-2 bg-black/60 px-3 py-1 rounded">
+      <div className="flex items-center gap-x-2 bg-slate-800/70 border border-slate-700 rounded px-4 py-2">
         <img src="/assets/ui/icon-ammo.svg" className="w-6 h-6" />
-        <span className="text-white text-lg">{ammo}</span>
+        <span className="text-lg text-white">{ammo}</span>
       </div>
       {planet.coreExtractable && (
         <button
