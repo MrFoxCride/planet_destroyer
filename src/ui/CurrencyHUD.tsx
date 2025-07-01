@@ -27,6 +27,10 @@ export const CurrencyHUD = () => {
         <img src="/assets/ui/icon-magmaton.svg" className="w-6 h-6" />
         <span className="text-base text-violet-300 font-medium">{res.magmaton}</span>
       </div>
+      <div className="flex items-center gap-x-2">
+        <img src="/assets/ui/icon-usdt.svg" className="w-6 h-6" />
+        <span className="text-base text-green-300 font-medium">{res.usdt}</span>
+      </div>
     </div>
   );
 };
