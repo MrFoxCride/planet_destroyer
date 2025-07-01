@@ -41,10 +41,12 @@ export class MainScreen extends PIXI.Container {
 
     this.surface = new PIXI.Graphics();
     this.mask = new PlanetMask(this.radius);
-    this.surface.mask = this.mask.sprite;
+    if (this.mask.isValid()) {
+      this.surface.mask = this.mask.sprite;
+      this.planetContainer.addChild(this.mask.sprite);
+      this.mask.sprite.renderable = false;
+    }
     this.planetContainer.addChild(this.surface);
-    this.planetContainer.addChild(this.mask.sprite);
-    this.mask.sprite.renderable = false;
     this.effectLayer = new PIXI.Container();
     this.planetContainer.addChild(this.effectLayer);
 
@@ -82,7 +84,7 @@ export class MainScreen extends PIXI.Container {
 
   updateView(state) {
     const p = state.planet;
-    if (p.hp === p.maxHp && !p.destroyed) {
+    if (p.hp === p.maxHp && !p.destroyed && this.mask.isValid()) {
       this.mask.reset();
     }
     this.surface.visible = !p.destroyed;
@@ -92,7 +94,9 @@ export class MainScreen extends PIXI.Container {
       this.surface.drawCircle(0, 0, this.radius);
       this.surface.endFill();
     }
-    this.mask.sprite.alpha = p.destroyed ? 0 : 1;
+    if (this.mask.isValid()) {
+      this.mask.sprite.alpha = p.destroyed ? 0 : 1;
+    }
     this.glow.clear();
     this.glow.beginFill(p.destroyed ? 0x444444 : 0x6666ff, 0.4);
     this.glow.drawCircle(0, 0, this.radius * 1.2);
@@ -112,7 +116,25 @@ export class MainScreen extends PIXI.Container {
     store.off('update', this.listener);
     PIXI.Ticker.shared.remove(this.animateIn, this);
     PIXI.Ticker.shared.remove(this.pulseGlow, this);
+    this.destroyMask();
     super.destroy(opts);
+  }
+
+  destroyMask() {
+    if (this.surface.mask) this.surface.mask = null;
+    if (this.mask) {
+      this.mask.destroy({ children: true, texture: true, baseTexture: true });
+      this.mask = null;
+    }
+  }
+
+  killPlanet() {
+    this.destroyMask();
+    PIXI.Ticker.shared.remove(this.animateIn, this);
+    PIXI.Ticker.shared.remove(this.pulseGlow, this);
+    if (!store.state.planet.destroyed) {
+      store.damagePlanet(store.state.planet.hp);
+    }
   }
 
   animateIn(delta) {
@@ -175,10 +197,16 @@ export class MainScreen extends PIXI.Container {
   applyHit(x, y, dmg) {
     const r = this.radius * (0.08 + Math.random() * 0.04) * (dmg / 10);
     const brush = BrushManager.get();
-    this.mask.cut(x, y, r, brush);
+    if (this.mask.isValid()) {
+      this.mask.cut(x, y, r, brush);
+    }
     this.spawnSmoke(x, y, r);
     weaponSystem.applyHit(dmg);
-    if (!store.state.planet.destroyed && this.mask.coverage() >= 0.95) {
+    if (
+      !store.state.planet.destroyed &&
+      this.mask.isValid() &&
+      this.mask.coverage() >= 0.95
+    ) {
       store.damagePlanet(store.state.planet.hp);
     }
   }

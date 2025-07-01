@@ -47,9 +47,16 @@ export const DevPanel = () => {
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
-              onClick={() => store.damagePlanet(store.state.planet.hp)}
+              onClick={() => {
+                const scr: any = stateManager.current;
+                if (scr && typeof scr.killPlanet === 'function') {
+                  scr.killPlanet();
+                } else {
+                  store.damagePlanet(store.state.planet.hp);
+                }
+              }}
             >
-              Destroy planet
+              Instant Kill
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
