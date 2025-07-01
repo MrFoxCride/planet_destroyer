@@ -7,6 +7,7 @@ import { DevPanel } from './ui/DevPanel.tsx';
 import { BottomNavBar } from './ui/BottomNavBar.tsx';
 import { CurrencyHUD } from './ui/CurrencyHUD.tsx';
 import { WeaponPanel } from './ui/WeaponPanel.tsx';
+import { GalaxyButton } from './ui/GalaxyButton.tsx';
 import { RewardDustPopup } from './ui/RewardDustPopup.tsx';
 import { RewardCorePopup } from './ui/RewardCorePopup.tsx';
 import { UnlockSectorModal } from './ui/UnlockSectorModal.tsx';
@@ -46,6 +47,7 @@ function UI() {
     <div className="absolute inset-0 flex flex-col justify-between items-center pointer-events-none">
       <CurrencyHUD />
       <WeaponPanel />
+      <GalaxyButton />
       {dustReward !== null && (
         <RewardDustPopup amount={dustReward} onClose={() => setDustReward(null)} />
       )}

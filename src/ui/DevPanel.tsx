@@ -47,6 +47,12 @@ export const DevPanel = () => {
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.addCore(10, 'dev')}
+            >
+              Add Cores
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
               onClick={() => {
                 const scr: any = stateManager.current;
                 if (scr && typeof scr.killPlanet === 'function') {
