@@ -26,7 +26,7 @@ export class MainScreen extends PIXI.Container {
 
 
     this.glow = new PIXI.Graphics();
-    this.glow.beginFill(0x6666ff, 0.4);
+    this.glow.beginFill(0xffffff, 0.4);
     this.glow.drawCircle(0, 0, this.radius * 1.2);
     this.glow.endFill();
     this.glow.filters = [new PIXI.filters.BlurFilter(8)];
@@ -95,7 +95,7 @@ export class MainScreen extends PIXI.Container {
     this.surface.visible = !p.destroyed;
     this.surface.clear();
     if (!p.destroyed) {
-      this.surface.beginFill(0x8888ff);
+      this.surface.beginFill(p.surfaceColor);
       this.surface.drawCircle(0, 0, this.radius);
       this.surface.endFill();
     }
@@ -103,7 +103,7 @@ export class MainScreen extends PIXI.Container {
       this.planetMask.sprite.alpha = p.destroyed ? 0 : 1;
     }
     this.glow.clear();
-    this.glow.beginFill(p.destroyed ? 0x444444 : 0x6666ff, 0.4);
+    this.glow.beginFill(p.destroyed ? 0x444444 : p.glowColor, 0.4);
     this.glow.drawCircle(0, 0, this.radius * 1.2);
     this.glow.endFill();
 

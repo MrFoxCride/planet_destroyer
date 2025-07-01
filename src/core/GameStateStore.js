@@ -114,6 +114,7 @@ export class GameStateStore {
         for (let i = 0; i < count; i++) {
           const name = this._uniqueName(used);
           const pos = this._randomPos(sector.entities);
+          const { surface, glow } = this._randomColors();
           sector.entities.push({
             id: `${s.id}-P${i + 1}`,
             type: 'planet',
@@ -125,6 +126,8 @@ export class GameStateStore {
             coreExtractable: false,
             dustSinceSpawn: 0,
             colony: false,
+            surfaceColor: surface,
+            glowColor: glow,
           });
         }
       }
@@ -160,6 +163,20 @@ export class GameStateStore {
       }
     }
     return { x: margin, y: margin };
+  }
+
+  _randomColors() {
+    const palette = [0x8e44ad, 0x3498db, 0x27ae60, 0xf1c40f, 0xe91e63];
+    const base = palette[Math.floor(Math.random() * palette.length)];
+    const surface = base;
+    const lighten = (c, f) => {
+      const r = Math.min(255, ((c >> 16) & 0xff) * f);
+      const g = Math.min(255, ((c >> 8) & 0xff) * f);
+      const b = Math.min(255, (c & 0xff) * f);
+      return (r << 16) | (g << 8) | b;
+    };
+    const glow = lighten(base, 1.3);
+    return { surface, glow };
   }
 
   openUnlockModal(id) {

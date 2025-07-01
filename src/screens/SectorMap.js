@@ -38,6 +38,7 @@ export class SectorMap extends PIXI.Container {
     icon.x = 6;
     icon.y = 6;
     icon.tint = 0xffffff;
+    icon.filters = [new PIXI.filters.DropShadowFilter({ blur: 2, alpha: 0.8 })];
     hit.addChild(icon);
     this.addChild(hit);
   }
@@ -64,8 +65,17 @@ export class SectorMap extends PIXI.Container {
     sector.entities.forEach((ent) => {
       const x = zoneLeft + (ent.position.x / 100) * zoneW;
       const y = zoneTop + (ent.position.y / 100) * zoneH;
+      const glow = new PIXI.Graphics();
+      glow.beginFill(ent.glowColor, 0.6);
+      glow.drawCircle(0, 0, radius * 1.4);
+      glow.endFill();
+      glow.filters = [new PIXI.filters.BlurFilter(4)];
+      glow.x = x;
+      glow.y = y;
+      this.mapLayer.addChild(glow);
+
       const g = new PIXI.Graphics();
-      g.beginFill(0x88aaff);
+      g.beginFill(ent.surfaceColor);
       g.drawCircle(0, 0, radius);
       g.endFill();
       g.x = x;

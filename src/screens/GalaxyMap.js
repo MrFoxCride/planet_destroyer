@@ -18,39 +18,43 @@ export class GalaxyMap extends PIXI.Container {
   }
 
   createBackButton() {
-    const { width, height } = this.app.renderer;
-    const btn = new PIXI.Text('Back', { fill: 'yellow', fontSize: 14 });
-    btn.anchor.set(0.5);
-    btn.x = width / 2;
-    btn.y = height - 30;
-    btn.eventMode = 'static';
-    btn.cursor = 'pointer';
-    btn.on('pointertap', () => this.manager.goBack());
-    this.addChild(btn);
+    const PADDING = 24;
+    const HUD_HEIGHT = 48;
+    const btnSize = 36;
+    const hit = new PIXI.Graphics();
+    hit.beginFill(0x000000, 0);
+    hit.drawRect(0, 0, 48, 48);
+    hit.endFill();
+    hit.x = PADDING;
+    hit.y = HUD_HEIGHT;
+    hit.eventMode = 'static';
+    hit.cursor = 'pointer';
+    hit.on('pointertap', () => this.manager.goBack());
+
+    const icon = PIXI.Sprite.from('/assets/ui/icon-back.svg');
+    icon.width = btnSize;
+    icon.height = btnSize;
+    icon.x = 6;
+    icon.y = 6;
+    icon.tint = 0xffffff;
+    icon.filters = [new PIXI.filters.DropShadowFilter({ blur: 2, alpha: 0.8 })];
+    hit.addChild(icon);
+    this.addChild(hit);
   }
 
   renderMap(state) {
     this.mapLayer.removeChildren();
     const { width, height } = this.app.renderer;
-    const cols = Math.max(...state.sectors.map((s) => s.position.x)) + 1;
-    const rows = Math.max(...state.sectors.map((s) => s.position.y)) + 1;
-    const baseRadius = Math.min(
-      width / ((cols + 0.5) * Math.sqrt(3)),
-      height / (rows * 1.5 + 0.5)
-    ) * 0.5;
-    const radius = baseRadius * 1.3;
+    const count = state.sectors.length;
+    const ringRadius = width * 0.35;
+    const radius = Math.max(36, width * 0.09);
     const hexW = Math.sqrt(3) * radius;
     const hexH = 2 * radius;
-    const horiz = hexW;
-    const vert = 1.5 * radius;
-    const totalW = horiz * (cols - 1) + hexW;
-    const totalH = vert * (rows - 1) + hexH;
-    const startX = (width - totalW) / 2;
-    const startY = (height - totalH) / 2;
 
-    state.sectors.forEach((sector) => {
-      const cx = startX + sector.position.x * horiz + (sector.position.y % 2 ? horiz / 2 : 0) + hexW / 2;
-      const cy = startY + sector.position.y * vert + hexH / 2;
+    state.sectors.forEach((sector, idx) => {
+      const angle = (-Math.PI / 2) + (idx * (Math.PI * 2)) / count;
+      const cx = width / 2 + ringRadius * Math.cos(angle);
+      const cy = height / 2 + ringRadius * Math.sin(angle);
 
       const g = new PIXI.Graphics();
       g.lineStyle(2, sector.unlocked ? 0xffffff : 0x555555);
