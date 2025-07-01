@@ -10,10 +10,10 @@ export class ColonySystem {
       sector.entities.forEach((p) => {
         if (p.colony) {
           if (!p.lastIncomeAt) p.lastIncomeAt = now;
-          const rate = (p.dustPerHour || 50) / 3600000;
           const delta = now - p.lastIncomeAt;
           if (delta > 0) {
-            p.storedDust = (p.storedDust || 0) + delta * rate;
+            const gain = (delta / 1000) * 10; // 10 dust per second
+            p.storedDust = Math.min(10000, (p.storedDust || 0) + gain);
             p.lastIncomeAt = now;
             changed = true;
           }

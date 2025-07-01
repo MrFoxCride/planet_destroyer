@@ -14,6 +14,7 @@ import { RewardCorePopup } from './ui/RewardCorePopup.tsx';
 import { UnlockSectorModal } from './ui/UnlockSectorModal.tsx';
 import { PlanetActionModal } from './ui/PlanetActionModal.tsx';
 import { ColonyPanel } from './ui/ColonyPanel.tsx';
+import { DustFlyout } from './ui/DustFlyout.tsx';
 
 const container = document.getElementById('canvas-container');
 container.appendChild(app.view);
@@ -34,20 +35,28 @@ function UI() {
   const [dustReward, setDustReward] = React.useState<number | null>(null);
   const [coreReward, setCoreReward] = React.useState<number | null>(null);
   const [unlockId, setUnlockId] = React.useState<string | null>(null);
+  const [flyouts, setFlyouts] = React.useState<{ id: number; amount: number }[]>([]);
 
   React.useEffect(() => {
     const dustCb = ({ amount, source }: any) => {
       if (source !== 'attack') setDustReward(amount);
+    };
+    const flyoutCb = ({ amount }: any) => {
+      const id = Date.now() + Math.random();
+      setFlyouts((f) => [...f, { id, amount }]);
+      setTimeout(() => setFlyouts((f) => f.filter((fl) => fl.id !== id)), 900);
     };
     const coreCb = ({ amount }: any) => setCoreReward(amount);
     const uiCb = (s: any) => setUnlockId(s.ui.unlockSectorId);
     store.on('reward:dust', dustCb);
     store.on('reward:core', coreCb);
     store.on('update', uiCb);
+    store.on('flyout', flyoutCb);
     return () => {
       store.off('reward:dust', dustCb);
       store.off('reward:core', coreCb);
       store.off('update', uiCb);
+      store.off('flyout', flyoutCb);
     };
   }, []);
 
@@ -58,6 +67,9 @@ function UI() {
       <ColonyPanel />
       <GalaxyButton />
       <PlanetActionModal />
+      {flyouts.map((f) => (
+        <DustFlyout key={f.id} amount={f.amount} />
+      ))}
       {dustReward !== null && (
         <RewardDustPopup amount={dustReward} onClose={() => setDustReward(null)} />
       )}

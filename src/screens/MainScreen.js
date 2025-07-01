@@ -71,16 +71,46 @@ export class MainScreen extends PIXI.Container {
     this.hpText.y = -this.radius - 16;
     this.planetContainer.addChild(this.hpText);
 
+    this.dustBg = new PIXI.Graphics();
+    this.dustBg.beginFill(0x222222, 0.8);
+    this.dustBg.lineStyle(2, 0xffffff);
+    this.dustBg.drawRoundedRect(-this.radius, -this.radius - 24, this.radius * 2, 16, 8);
+    this.dustBg.endFill();
+    this.dustBg.visible = false;
+    this.planetContainer.addChild(this.dustBg);
+
+    this.dustBar = new PIXI.Graphics();
+    this.dustBar.visible = false;
+    this.planetContainer.addChild(this.dustBar);
+
+    this.dustText = new PIXI.Text('', { fill: 'yellow', fontSize: 16 });
+    this.dustText.anchor.set(0.5);
+    this.dustText.y = -this.radius - 16;
+    this.dustText.visible = false;
+    this.planetContainer.addChild(this.dustText);
+
     this.nameLabel = new PIXI.Text('', { fill: 'white', fontSize: 20 });
     this.nameLabel.anchor.set(0.5);
     this.nameLabel.y = -this.radius - 40;
     this.planetContainer.addChild(this.nameLabel);
 
+    this.colonyIcon = PIXI.Sprite.from('/assets/ui/icon-colony.svg');
+    this.colonyIcon.anchor.set(0.5);
+    this.colonyIcon.width = 24;
+    this.colonyIcon.height = 24;
+    this.colonyIcon.visible = false;
+    this.planetContainer.addChild(this.colonyIcon);
+
     this.planetContainer.eventMode = 'static';
     this.planetContainer.cursor = 'pointer';
     this.planetContainer.on('pointertap', () => {
-      const dmg = weaponSystem.fire();
-      if (dmg) this.launchProjectile(dmg);
+      const p = store.state.planet;
+      if (p.colony) {
+        store.tapColonyDust();
+      } else {
+        const dmg = weaponSystem.fire();
+        if (dmg) this.launchProjectile(dmg);
+      }
     });
 
     this.updateView(store.get());
@@ -125,7 +155,30 @@ export class MainScreen extends PIXI.Container {
     this.hpText.visible = !p.colony;
     this.hpText.text = `${p.hp}/${p.maxHp}`;
 
+    this.dustBar.clear();
+    if (p.colony) {
+      const dr = Math.min(1, (p.storedDust || 0) / 10000);
+      this.dustBar.beginFill(0xffcc33);
+      this.dustBar.drawRoundedRect(
+        -this.radius,
+        -this.radius - 24,
+        this.radius * 2 * dr,
+        16,
+        8
+      );
+      this.dustBar.endFill();
+    }
+    this.dustBg.visible = p.colony;
+    this.dustBar.visible = p.colony;
+    this.dustText.visible = p.colony;
+    this.dustText.text = `${Math.floor(p.storedDust || 0)}/10000`;
+
     this.nameLabel.text = p.name;
+    this.colonyIcon.visible = p.colony;
+    if (p.colony) {
+      this.colonyIcon.x = this.nameLabel.width / 2 + 14;
+      this.colonyIcon.y = this.nameLabel.y;
+    }
   }
 
   destroy(opts) {
