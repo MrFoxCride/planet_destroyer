@@ -176,7 +176,7 @@ export class MainScreen extends PIXI.Container {
     this.nameLabel.text = p.name;
     this.colonyIcon.visible = p.colony;
     if (p.colony) {
-      this.colonyIcon.x = this.nameLabel.width / 2 + 14;
+      this.colonyIcon.x = -this.nameLabel.width / 2 - 14;
       this.colonyIcon.y = this.nameLabel.y;
     }
   }
