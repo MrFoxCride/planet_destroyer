@@ -6,7 +6,7 @@ interface Props {
 
 export const DustFlyout = ({ amount }: Props) => {
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-10 text-yellow-300 text-4xl font-bold pointer-events-none animate-flyout">
+    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-10 text-white text-4xl font-bold pointer-events-none animate-flyout">
       +{amount}
     </div>
   );

@@ -52,11 +52,11 @@ export const WeaponPanel = () => {
           </div>
         )}
       </div>
-      {planet.coreExtractable && (
+      {planet.status === 'destroyed' && (
         <button
           className="bg-green-600 text-white px-4 py-2 rounded w-32 h-12"
           onClick={() => {
-            store.collectCore();
+            store.startExtraction();
           }}
         >
           Send Unit
