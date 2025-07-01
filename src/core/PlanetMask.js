@@ -54,7 +54,7 @@ export class PlanetMask {
     const ctx = this.ctx;
     ctx.beginPath();
     if (brush === 'oval') {
-      ctx.ellipse(cx, cy, r * 1.4, r, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, r * 1.6, r, 0, 0, Math.PI * 2);
     } else if (brush === 'star') {
       const spikes = 5;
       const outerR = r;
@@ -74,6 +74,14 @@ export class PlanetMask {
       ctx.arc(cx, cy, r, 0, Math.PI * 2);
     }
     ctx.fill();
+  }
+
+  removeAll() {
+    if (!this.isValid()) return;
+    const size = this.canvas.width;
+    this.ctx.clearRect(0, 0, size, size);
+    this.texture.update();
+    this.removedArea = this.totalArea;
   }
 
   coverage() {

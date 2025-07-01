@@ -1,6 +1,6 @@
 export const BrushManager = {
   brushes: ['circle', 'oval', 'star'],
-  current: 'circle',
+  current: 'oval',
   set(brush) {
     if (this.brushes.includes(brush)) this.current = brush;
   },
