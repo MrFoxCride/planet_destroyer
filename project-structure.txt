@@ -1,0 +1,110 @@
+|   .gitignore
+|   agents.md
+|   index.html
+|   package-lock.json
+|   package.json
+|   postcss.config.js
+|   project-structure.txt
+|   README.md
+|   structure.txt
+|   tailwind.config.js
+|   vite.config.js
+|   
++---assets
+|   |   .gitkeep
+|   |   
+|   \---sprites
+|           .gitkeep
+|           
++---docs
+|   |   0-vision.md
+|   |   1-1-tech-requirements-n-restrictions.md
+|   |   1-2-art-n-physics-rules.md
+|   |   2-feature-list.md
+|   |   3-ui-map.md
+|   |   4-uml.md
+|   |   5-user-flow.md
+|   |   6-1-currency-flow.md
+|   |   6-2-economy-balance.md
+|   |   
+|   +---0-system
+|   |       analytics.md
+|   |       localization.md
+|   |       
+|   +---1-features
+|   |       feature-booster-system.md
+|   |       feature-colony-system.md
+|   |       feature-core-dispatch.md
+|   |       feature-daily-bonus.md
+|   |       feature-debug-panel.md
+|   |       feature-galaxy-map.md
+|   |       feature-news-modal.md
+|   |       feature-planet-interaction.md
+|   |       feature-quest-system.md
+|   |       feature-referral-system.md
+|   |       feature-reigns-events.md
+|   |       feature-usdt-nebula.md
+|   |       feature-vip-system.md
+|   |       feature-weapon-system.md
+|   |       feature-wheel-of-fortune.md
+|   |       
+|   \---2-screens
+|       |   screen-earn.md
+|       |   screen-expedition.md
+|       |   screen-friends.md
+|       |   screen-galaxy-map.md
+|       |   screen-main.md
+|       |   screen-profile.md
+|       |   screen-reigns-event.md
+|       |   screen-settings.md
+|       |   screen-store.md
+|       |   
+|       \---popups
+|               component-modal-button.md
+|               component-reward-item.md
+|               component-timer-bar.md
+|               modal-ad-reward-prompt.md
+|               modal-buy-ammo.md
+|               modal-fake-leaderboard.md
+|               modal-news.md
+|               modal-quest-block.md
+|               modal-unlock-sector.md
+|               modal-vip-benefits.md
+|               modal-weapon-select.md
+|               modal-withdraw-confirm.md
+|               popup-booster-activated.md
+|               popup-event-outcome.md
+|               popup-reward-core.md
+|               popup-reward-dust.md
+|               popup-reward-ticket.md
+|               popup-reward-usdt.md
+|               popup-reward-vip.md
+|               
++---public
+|       .gitkeep
+|       
+\---src
+    |   main.js
+    |   stateManager.js
+    |   style.css
+    |   
+    +---core
+    |       AssetLoader.js
+    |       SaveManager.js
+    |       TimerManager.js
+    |       
+    +---data
+    |       .gitkeep
+    |       
+    +---screens
+    |       ArsenalLab.js
+    |       DispatchCenter.js
+    |       FortuneWheel.js
+    |       Leaderboard.js
+    |       LoadingScreen.js
+    |       PlanetField.js
+    |       Upgrades.js
+    |       
+    \---ui
+            .gitkeep
+            
