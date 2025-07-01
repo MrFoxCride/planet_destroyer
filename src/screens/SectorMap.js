@@ -19,15 +19,27 @@ export class SectorMap extends PIXI.Container {
   }
 
   createBackButton() {
-    const { width, height } = this.app.renderer;
-    const btn = new PIXI.Text('Back', { fill: 'yellow', fontSize: 14 });
-    btn.anchor.set(0.5);
-    btn.x = width / 2;
-    btn.y = height - 30;
-    btn.eventMode = 'static';
-    btn.cursor = 'pointer';
-    btn.on('pointertap', () => this.manager.goBack());
-    this.addChild(btn);
+    const PADDING = 24;
+    const HUD_HEIGHT = 48;
+    const btnSize = 36;
+    const hit = new PIXI.Graphics();
+    hit.beginFill(0x000000, 0);
+    hit.drawRect(0, 0, 48, 48);
+    hit.endFill();
+    hit.x = PADDING;
+    hit.y = HUD_HEIGHT;
+    hit.eventMode = 'static';
+    hit.cursor = 'pointer';
+    hit.on('pointertap', () => this.manager.goBack());
+
+    const icon = PIXI.Sprite.from('/assets/ui/icon-back.svg');
+    icon.width = btnSize;
+    icon.height = btnSize;
+    icon.x = 6;
+    icon.y = 6;
+    icon.tint = 0xffffff;
+    hit.addChild(icon);
+    this.addChild(hit);
   }
 
   renderSector(state) {
@@ -36,10 +48,22 @@ export class SectorMap extends PIXI.Container {
     if (!sector) return;
     const { width, height } = this.app.renderer;
 
+    const PADDING = 24;
+    const HUD_HEIGHT = 48;
+    const BACK_SIZE = 48;
+    const NAV_HEIGHT = 56;
+
+    const zoneLeft = PADDING;
+    const zoneRight = width - PADDING;
+    const zoneTop = HUD_HEIGHT + BACK_SIZE + PADDING;
+    const zoneBottom = height - NAV_HEIGHT - PADDING;
+    const zoneW = zoneRight - zoneLeft;
+    const zoneH = zoneBottom - zoneTop;
+
     const radius = 24;
     sector.entities.forEach((ent) => {
-      const x = (ent.position.x / 100) * width;
-      const y = (ent.position.y / 100) * height;
+      const x = zoneLeft + (ent.position.x / 100) * zoneW;
+      const y = zoneTop + (ent.position.y / 100) * zoneH;
       const g = new PIXI.Graphics();
       g.beginFill(0x88aaff);
       g.drawCircle(0, 0, radius);
