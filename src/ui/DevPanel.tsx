@@ -10,10 +10,10 @@ export const DevPanel = () => {
   return (
     <>
       <button
-        className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-purple-600 text-white z-[400] pointer-events-auto opacity-0"
+        className="absolute top-4 right-4 w-12 h-12 rounded-full bg-purple-600 text-white z-[400] pointer-events-auto"
         onClick={() => setOpen(true)}
       >
-        Dev
+        <img src="/assets/ui/icon-dev.svg" className="w-full h-full" />
       </button>
       {open && (
         <div
@@ -24,6 +24,7 @@ export const DevPanel = () => {
             className="bg-gray-800 text-white p-4 rounded-lg drop-shadow pointer-events-auto"
             onClick={(e) => e.stopPropagation()}
           >
+            <button className="absolute top-2 right-2" onClick={() => setOpen(false)}>✕</button>
             <button
               className="bg-blue-500 px-2 py-1"
               onClick={() => store.addDust(100, 'dev')}

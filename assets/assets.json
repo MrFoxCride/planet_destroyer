@@ -5,11 +5,13 @@
     "iconCore": "ui/icon-core.svg",
     "iconMagmaton": "ui/icon-magmaton.svg",
     "iconAmmo": "ui/icon-ammo.svg",
-    "bgStars": "ui/bg-stars.svg",
+    "bgStars": "ui/bg_stars.svg",
     "navProfile": "ui/nav-profile.svg",
     "navStore": "ui/nav-store.svg",
     "navMain": "ui/nav-main.svg",
     "navEarn": "ui/nav-earn.svg",
-    "navFriends": "ui/nav-friends.svg"
+    "navFriends": "ui/nav-friends.svg",
+    "weaponPlaceholder": "ui/weapon_placeholder.svg",
+    "iconDev": "ui/icon-dev.svg"
   }
 }
