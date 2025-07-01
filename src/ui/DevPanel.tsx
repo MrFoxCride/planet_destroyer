@@ -67,6 +67,12 @@ export const DevPanel = () => {
             >
               Instant Dispatch
             </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.unlockAllSectors()}
+            >
+              Unlock all sectors
+            </button>
             <div className="flex gap-1 mt-2">
               {BrushManager.brushes.map((b) => (
                 <button

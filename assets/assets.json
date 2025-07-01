@@ -12,6 +12,10 @@
     "navEarn": "ui/nav-earn.svg",
     "navFriends": "ui/nav-friends.svg",
     "weaponPlaceholder": "ui/weapon_placeholder.svg",
-    "iconDev": "ui/icon-dev.svg"
+    "iconDev": "ui/icon-dev.svg",
+    "iconLock": "ui/icon-lock.svg",
+    "iconPlanet": "ui/icon-planet.svg",
+    "iconNebula": "ui/icon-nebula.svg",
+    "iconColony": "ui/icon-colony.svg"
   }
 }
