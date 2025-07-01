@@ -65,6 +65,18 @@ export class GameStateStore {
     this.emit('update', this.state);
   }
 
+  selectPlanet(ent) {
+    this.state.planet = {
+      name: ent.name,
+      hp: 100,
+      maxHp: 100,
+      destroyed: false,
+      coreExtractable: false,
+      dustSinceSpawn: 0,
+    };
+    this.emit('update', this.state);
+  }
+
   damagePlanet(amount) {
     const p = this.state.planet;
     if (p.destroyed) return;

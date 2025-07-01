@@ -34,7 +34,11 @@ export class GalaxyMap extends PIXI.Container {
     const { width, height } = this.app.renderer;
     const cols = Math.max(...state.sectors.map((s) => s.position.x)) + 1;
     const rows = Math.max(...state.sectors.map((s) => s.position.y)) + 1;
-    const radius = Math.min(width / ((cols + 0.5) * Math.sqrt(3)), height / (rows * 1.5 + 0.5)) * 0.5;
+    const baseRadius = Math.min(
+      width / ((cols + 0.5) * Math.sqrt(3)),
+      height / (rows * 1.5 + 0.5)
+    ) * 0.5;
+    const radius = baseRadius * 1.3;
     const hexW = Math.sqrt(3) * radius;
     const hexH = 2 * radius;
     const horiz = hexW;
@@ -85,25 +89,15 @@ export class GalaxyMap extends PIXI.Container {
       store.openUnlockModal(sector.id);
       return;
     }
-    const ent = sector.entities && sector.entities[0];
-    if (ent) {
-      this.onEntityTap(ent);
+    if (sector.entities && sector.entities.length > 0) {
+      this.manager.goTo('SectorMap', { sectorId: sector.id });
     } else {
       window.alert('Sector empty');
     }
   }
 
   onEntityTap(ent) {
-    store.set({
-      planet: {
-        name: ent.name,
-        hp: 100,
-        maxHp: 100,
-        destroyed: false,
-        coreExtractable: false,
-        dustSinceSpawn: 0,
-      },
-    });
+    store.selectPlanet(ent);
     this.manager.goTo('MainScreen');
   }
 
