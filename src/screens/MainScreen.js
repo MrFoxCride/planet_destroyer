@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { BlurFilter } from '@pixi/filter-blur';
 import { store, stateManager } from '../core/GameEngine.js';
 import { weaponSystem } from '../core/WeaponSystem.js';
 import { PlanetMask } from '../core/PlanetMask.js';
@@ -29,7 +30,7 @@ export class MainScreen extends PIXI.Container {
     this.glow.beginFill(0xffffff, 0.4);
     this.glow.drawCircle(0, 0, this.radius * 1.2);
     this.glow.endFill();
-    this.glow.filters = [new PIXI.filters.BlurFilter(8)];
+    this.glow.filters = [new BlurFilter(8)];
     this.planetContainer.addChild(this.glow);
     this.glowPulse = 0;
     PIXI.Ticker.shared.add(this.pulseGlow, this);
@@ -245,7 +246,7 @@ export class MainScreen extends PIXI.Container {
     g.beginFill(0xffffff, 0.6);
     g.drawCircle(0, 0, r * 1.2);
     g.endFill();
-    g.filters = [new PIXI.filters.BlurFilter(4)];
+    g.filters = [new BlurFilter(4)];
     g.x = x;
     g.y = y;
     this.effectLayer.addChild(g);

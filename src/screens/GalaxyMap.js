@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { DropShadowFilter } from '@pixi/filter-drop-shadow';
 import { store } from '../core/GameEngine.js';
 
 export class GalaxyMap extends PIXI.Container {
@@ -37,7 +38,7 @@ export class GalaxyMap extends PIXI.Container {
     icon.x = 6;
     icon.y = 6;
     icon.tint = 0xffffff;
-    icon.filters = [new PIXI.filters.DropShadowFilter({ blur: 2, alpha: 0.8 })];
+    icon.filters = [new DropShadowFilter({ blur: 2, alpha: 0.8 })];
     hit.addChild(icon);
     this.addChild(hit);
   }
