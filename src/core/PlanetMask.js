@@ -15,9 +15,19 @@ export class PlanetMask {
     this.sprite.visible = false;
     this.totalArea = Math.PI * radius * radius;
     this.removedArea = 0;
+    this.destroyed = false;
+  }
+
+  isValid() {
+    return (
+      this.texture instanceof PIXI.Texture &&
+      !this.texture.destroyed &&
+      !this.destroyed
+    );
   }
 
   reset() {
+    if (!this.isValid()) return;
     const size = this.canvas.width;
     this.ctx.globalCompositeOperation = 'source-over';
     this.ctx.clearRect(0, 0, size, size);
@@ -28,6 +38,7 @@ export class PlanetMask {
   }
 
   cut(x, y, r, brush = 'circle') {
+    if (!this.isValid()) return;
     this.ctx.save();
     this.ctx.globalCompositeOperation = 'destination-out';
     this.drawBrush(brush, x + this.radius, y + this.radius, r);
@@ -64,5 +75,16 @@ export class PlanetMask {
 
   coverage() {
     return this.removedArea / this.totalArea;
+  }
+
+  destroy(opts) {
+    if (this.destroyed) return;
+    this.destroyed = true;
+    this.sprite?.destroy(opts);
+    if (this.texture && !this.texture.destroyed) {
+      this.texture.destroy(true);
+    }
+    this.canvas = null;
+    this.ctx = null;
   }
 }
