@@ -16,6 +16,7 @@
     "iconLock": "ui/icon-lock.svg",
     "iconPlanet": "ui/icon-planet.svg",
     "iconNebula": "ui/icon-nebula.svg",
-    "iconColony": "ui/icon-colony.svg"
+    "iconColony": "ui/icon-colony.svg",
+    "iconGalaxy": "ui/icon-galaxy.svg"
   }
 }

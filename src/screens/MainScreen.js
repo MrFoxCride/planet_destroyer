@@ -24,14 +24,6 @@ export class MainScreen extends PIXI.Container {
     this.projectileLayer = new PIXI.Container();
     this.addChild(this.projectileLayer);
 
-    const galaxyBtn = new PIXI.Text('Galaxy', { fill: 'yellow', fontSize: 14 });
-    galaxyBtn.anchor.set(1, 0);
-    galaxyBtn.x = width - 10;
-    galaxyBtn.y = 10;
-    galaxyBtn.eventMode = 'static';
-    galaxyBtn.cursor = 'pointer';
-    galaxyBtn.on('pointertap', () => stateManager.goTo('GalaxyMap'));
-    this.addChild(galaxyBtn);
 
     this.glow = new PIXI.Graphics();
     this.glow.beginFill(0x6666ff, 0.4);
