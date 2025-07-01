@@ -12,6 +12,8 @@ export class PlanetMask {
     this.ctx.fillRect(0, 0, size, size);
     this.texture = PIXI.Texture.from(this.canvas);
     this.sprite = new PIXI.Sprite(this.texture);
+    this.sprite.anchor.set(0.5);
+    this.sprite.position.set(0, 0);
     this.sprite.visible = false;
     this.totalArea = Math.PI * radius * radius;
     this.removedArea = 0;
