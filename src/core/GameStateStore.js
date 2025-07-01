@@ -292,7 +292,7 @@ export class GameStateStore {
 
   updateExtractions() {
     const now = Date.now();
-    let changed = false;
+    const completed = [];
     this.state.sectors.forEach((sector) => {
       sector.entities.forEach((p) => {
         if (p.status === 'extracting' && p.extraction) {
@@ -301,12 +301,30 @@ export class GameStateStore {
             p.status = 'empty';
             p.extraction = null;
             p.coreExtractable = false;
-            changed = true;
+            completed.push({
+              sectorId: sector.id,
+              planetId: p.id,
+              name: p.name,
+              amount: 1,
+            });
           }
         }
       });
     });
-    if (changed) this.emit('update', this.state);
+    if (completed.length) {
+      this.emit('update', this.state);
+      completed.forEach((c) => this.emit('extraction:completed', c));
+    }
+  }
+
+  removePlanet(sectorId, planetId) {
+    const sector = this.state.sectors.find((s) => s.id === sectorId);
+    if (!sector) return false;
+    const idx = sector.entities.findIndex((e) => e.id === planetId);
+    if (idx === -1) return false;
+    sector.entities.splice(idx, 1);
+    this.emit('update', this.state);
+    return true;
   }
 
   openUnlockModal(id) {
