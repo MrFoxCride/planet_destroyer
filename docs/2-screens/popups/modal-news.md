@@ -61,6 +61,5 @@ The News Modal is a horizontal swipe-based banner carousel that auto-presents pr
 ---
 
 ## 7. Dependencies
-- Asset: `/assets/ui/news_banner_*.webp`
 - Data: pulled from remote config or `NewsSystem.getBanners()`
 - OverlayManager, EventLogger, NewsSystem
