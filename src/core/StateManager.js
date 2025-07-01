@@ -1,5 +1,6 @@
 import { MainScreen } from '../screens/MainScreen.js';
 import { GalaxyMap } from '../screens/GalaxyMap.js';
+import { SectorMap } from '../screens/SectorMap.js';
 import { Profile } from '../screens/Profile.js';
 import { Store } from '../screens/Store.js';
 import { Earn } from '../screens/Earn.js';
@@ -8,6 +9,7 @@ import { Friends } from '../screens/Friends.js';
 const registry = {
   MainScreen,
   GalaxyMap,
+  SectorMap,
   Profile,
   Store,
   Earn,
