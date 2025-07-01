@@ -23,6 +23,11 @@ export class GameStateStore {
       },
     };
     this.listeners = new Map();
+    this.namePool = [];
+  }
+
+  initNamePool(names) {
+    this.namePool = [...names];
   }
 
   set(partial) {
@@ -66,14 +71,8 @@ export class GameStateStore {
   }
 
   selectPlanet(ent) {
-    this.state.planet = {
-      name: ent.name,
-      hp: 100,
-      maxHp: 100,
-      destroyed: false,
-      coreExtractable: false,
-      dustSinceSpawn: 0,
-    };
+    if (!ent) return;
+    this.state.planet = ent;
     this.emit('update', this.state);
   }
 
@@ -106,8 +105,61 @@ export class GameStateStore {
   }
 
   initSectors(list) {
-    this.state.sectors = list.map((s) => ({ ...s }));
+    const used = new Set();
+    this.state.sectors = list.map((s) => {
+      const sector = { ...s };
+      if (!sector.entities) {
+        const count = 5 + Math.floor(Math.random() * 6);
+        sector.entities = [];
+        for (let i = 0; i < count; i++) {
+          const name = this._uniqueName(used);
+          const pos = this._randomPos(sector.entities);
+          sector.entities.push({
+            id: `${s.id}-P${i + 1}`,
+            type: 'planet',
+            name,
+            position: { x: pos.x * 100, y: pos.y * 100 },
+            hp: 100,
+            maxHp: 100,
+            destroyed: false,
+            coreExtractable: false,
+            dustSinceSpawn: 0,
+            colony: false,
+          });
+        }
+      }
+      return sector;
+    });
     this.emit('update', this.state);
+  }
+
+  _uniqueName(used) {
+    if (!this.namePool.length) return `Planet ${used.size + 1}`;
+    let name = this.namePool.shift();
+    while (used.has(name) && this.namePool.length) {
+      name = this.namePool.shift();
+    }
+    used.add(name);
+    return name;
+  }
+
+  _randomPos(existing) {
+    const margin = 0.1;
+    const minDist = 0.15;
+    for (let t = 0; t < 100; t++) {
+      const x = margin + Math.random() * (1 - margin * 2);
+      const y = margin + Math.random() * (1 - margin * 2);
+      if (
+        existing.every((e) => {
+          const dx = x - e.position.x / 100;
+          const dy = y - e.position.y / 100;
+          return Math.hypot(dx, dy) >= minDist;
+        })
+      ) {
+        return { x, y };
+      }
+    }
+    return { x: margin, y: margin };
   }
 
   openUnlockModal(id) {

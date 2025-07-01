@@ -35,35 +35,27 @@ export class SectorMap extends PIXI.Container {
     const sector = state.sectors.find((s) => s.id === this.sectorId);
     if (!sector) return;
     const { width, height } = this.app.renderer;
-    const size = Math.min(width, height) * 0.6;
-    const startX = (width - size) / 2;
-    const startY = (height - size) / 2;
 
-    const border = new PIXI.Graphics();
-    border.lineStyle(2, 0x555555);
-    border.beginFill(0x222222);
-    border.drawRect(startX, startY, size, size);
-    border.endFill();
-    this.mapLayer.addChild(border);
-
+    const radius = 24;
     sector.entities.forEach((ent) => {
-      const x = startX + (ent.position.x / 100) * size;
-      const y = startY + (ent.position.y / 100) * size;
+      const x = (ent.position.x / 100) * width;
+      const y = (ent.position.y / 100) * height;
       const g = new PIXI.Graphics();
       g.beginFill(0x88aaff);
-      g.drawCircle(0, 0, 8);
+      g.drawCircle(0, 0, radius);
       g.endFill();
       g.x = x;
       g.y = y;
       g.eventMode = 'static';
       g.cursor = 'pointer';
+      g.hitArea = new PIXI.Circle(0, 0, radius);
       g.on('pointertap', () => this.onPlanetTap(ent));
       this.mapLayer.addChild(g);
 
-      const label = new PIXI.Text(ent.name, { fill: 'white', fontSize: 12 });
-      label.anchor.set(0.5, 0);
+      const label = new PIXI.Text(ent.name, { fill: 'white', fontSize: 16 });
+      label.anchor.set(0.5);
       label.x = x;
-      label.y = y + 10;
+      label.y = y - radius - 4;
       this.mapLayer.addChild(label);
     });
   }
