@@ -40,11 +40,11 @@ export class MainScreen extends PIXI.Container {
     this.planetContainer.addChild(this.core);
 
     this.surface = new PIXI.Graphics();
-    this.mask = new PlanetMask(this.radius);
-    if (this.mask.isValid()) {
-      this.surface.mask = this.mask.sprite;
-      this.planetContainer.addChild(this.mask.sprite);
-      this.mask.sprite.renderable = false;
+    this.planetMask = new PlanetMask(this.radius);
+    if (this.planetMask.isValid()) {
+      this.surface.mask = this.planetMask.sprite;
+      this.planetContainer.addChild(this.planetMask.sprite);
+      this.planetMask.sprite.renderable = false;
     }
     this.planetContainer.addChild(this.surface);
     this.effectLayer = new PIXI.Container();
@@ -84,8 +84,8 @@ export class MainScreen extends PIXI.Container {
 
   updateView(state) {
     const p = state.planet;
-    if (p.hp === p.maxHp && !p.destroyed && this.mask.isValid()) {
-      this.mask.reset();
+    if (p.hp === p.maxHp && !p.destroyed && this.planetMask.isValid()) {
+      this.planetMask.reset();
     }
     this.surface.visible = !p.destroyed;
     this.surface.clear();
@@ -94,8 +94,8 @@ export class MainScreen extends PIXI.Container {
       this.surface.drawCircle(0, 0, this.radius);
       this.surface.endFill();
     }
-    if (this.mask.isValid()) {
-      this.mask.sprite.alpha = p.destroyed ? 0 : 1;
+    if (this.planetMask.isValid()) {
+      this.planetMask.sprite.alpha = p.destroyed ? 0 : 1;
     }
     this.glow.clear();
     this.glow.beginFill(p.destroyed ? 0x444444 : 0x6666ff, 0.4);
@@ -122,9 +122,9 @@ export class MainScreen extends PIXI.Container {
 
   destroyMask() {
     if (this.surface.mask) this.surface.mask = null;
-    if (this.mask) {
-      this.mask.destroy({ children: true, texture: true, baseTexture: true });
-      this.mask = null;
+    if (this.planetMask) {
+      this.planetMask.destroy({ children: true, texture: true, baseTexture: true });
+      this.planetMask = null;
     }
   }
 
@@ -197,15 +197,15 @@ export class MainScreen extends PIXI.Container {
   applyHit(x, y, dmg) {
     const r = this.radius * (0.08 + Math.random() * 0.04) * (dmg / 10);
     const brush = BrushManager.get();
-    if (this.mask.isValid()) {
-      this.mask.cut(x, y, r, brush);
+    if (this.planetMask.isValid()) {
+      this.planetMask.cut(x, y, r, brush);
     }
     this.spawnSmoke(x, y, r);
     weaponSystem.applyHit(dmg);
     if (
       !store.state.planet.destroyed &&
-      this.mask.isValid() &&
-      this.mask.coverage() >= 0.95
+      this.planetMask.isValid() &&
+      this.planetMask.coverage() >= 0.95
     ) {
       store.damagePlanet(store.state.planet.hp);
     }
