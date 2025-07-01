@@ -53,7 +53,6 @@ VIP Reward Popup confirms that the player has reached a new VIP level, either vi
 ---
 
 ## 7. Dependencies
-- Asset: `/assets/ui/reward_vip_icon.webp`
 - Data: `VIPSystem.getBenefits(level)`
 - VFX: `vfx.confetti.gold`
 - OverlayManager, EventLogger, VIPSystem
