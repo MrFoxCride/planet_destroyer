@@ -14,7 +14,8 @@ export class PlanetMask {
     this.sprite = new PIXI.Sprite(this.texture);
     this.sprite.anchor.set(0.5);
     this.sprite.position.set(0, 0);
-    this.sprite.visible = false;
+    // the mask must remain visible to function, hide using renderable flag
+    this.sprite.visible = true;
     this.totalArea = Math.PI * radius * radius;
     this.removedArea = 0;
     this.destroyed = false;
