@@ -2,6 +2,7 @@ import React from 'react';
 import { isProd } from '../data/BuildFlags.js';
 import { stateManager, store } from '../core/GameEngine.js';
 import { weaponSystem } from '../core/WeaponSystem.js';
+import { BrushManager } from '../core/BrushManager.js';
 
 const screens = ['MainScreen', 'GalaxyMap', 'Profile', 'Store', 'Earn', 'Friends'];
 
@@ -59,6 +60,17 @@ export const DevPanel = () => {
             >
               Instant Dispatch
             </button>
+            <div className="flex gap-1 mt-2">
+              {BrushManager.brushes.map((b) => (
+                <button
+                  key={b}
+                  className="bg-blue-500 px-2 py-1 text-sm"
+                  onClick={() => BrushManager.set(b)}
+                >
+                  {b}
+                </button>
+              ))}
+            </div>
             <div className="flex flex-wrap space-x-1 mt-2">
               {screens.map((s) => (
                 <button

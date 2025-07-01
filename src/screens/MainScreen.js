@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js';
 import { store } from '../core/GameEngine.js';
 import { weaponSystem } from '../core/WeaponSystem.js';
+import { PlanetMask } from '../core/PlanetMask.js';
+import { BrushManager } from '../core/BrushManager.js';
 
 export class MainScreen extends PIXI.Container {
   constructor(app) {
@@ -38,13 +40,13 @@ export class MainScreen extends PIXI.Container {
     this.planetContainer.addChild(this.core);
 
     this.surface = new PIXI.Graphics();
-    this.destructionMask = new PIXI.Graphics();
-    this.destructionMask.beginFill(0xffffff);
-    this.destructionMask.drawCircle(0, 0, this.radius);
-    this.destructionMask.endFill();
-    this.surface.mask = this.destructionMask;
+    this.mask = new PlanetMask(this.radius);
+    this.surface.mask = this.mask.sprite;
     this.planetContainer.addChild(this.surface);
-    this.planetContainer.addChild(this.destructionMask);
+    this.planetContainer.addChild(this.mask.sprite);
+    this.mask.sprite.renderable = false;
+    this.effectLayer = new PIXI.Container();
+    this.planetContainer.addChild(this.effectLayer);
 
     this.hpBg = new PIXI.Graphics();
     this.hpBg.beginFill(0x222222, 0.8);
@@ -81,10 +83,7 @@ export class MainScreen extends PIXI.Container {
   updateView(state) {
     const p = state.planet;
     if (p.hp === p.maxHp && !p.destroyed) {
-      this.destructionMask.clear();
-      this.destructionMask.beginFill(0xffffff);
-      this.destructionMask.drawCircle(0, 0, this.radius);
-      this.destructionMask.endFill();
+      this.mask.reset();
     }
     this.surface.visible = !p.destroyed;
     this.surface.clear();
@@ -93,6 +92,7 @@ export class MainScreen extends PIXI.Container {
       this.surface.drawCircle(0, 0, this.radius);
       this.surface.endFill();
     }
+    this.mask.sprite.alpha = p.destroyed ? 0 : 1;
     this.glow.clear();
     this.glow.beginFill(p.destroyed ? 0x444444 : 0x6666ff, 0.4);
     this.glow.drawCircle(0, 0, this.radius * 1.2);
@@ -174,10 +174,34 @@ export class MainScreen extends PIXI.Container {
 
   applyHit(x, y, dmg) {
     const r = this.radius * (0.08 + Math.random() * 0.04) * (dmg / 10);
-    this.destructionMask.beginHole();
-    this.destructionMask.drawCircle(x, y, r);
-    this.destructionMask.endHole();
+    const brush = BrushManager.get();
+    this.mask.cut(x, y, r, brush);
+    this.spawnSmoke(x, y, r);
     weaponSystem.applyHit(dmg);
+    if (!store.state.planet.destroyed && this.mask.coverage() >= 0.95) {
+      store.damagePlanet(store.state.planet.hp);
+    }
+  }
+
+  spawnSmoke(x, y, r) {
+    const g = new PIXI.Graphics();
+    g.beginFill(0xffffff, 0.6);
+    g.drawCircle(0, 0, r * 1.2);
+    g.endFill();
+    g.filters = [new PIXI.filters.BlurFilter(4)];
+    g.x = x;
+    g.y = y;
+    this.effectLayer.addChild(g);
+    const start = performance.now();
+    const tick = () => {
+      const t = (performance.now() - start) / 1000;
+      g.alpha = 0.6 * (1 - t);
+      if (t >= 1) {
+        g.destroy();
+        PIXI.Ticker.shared.remove(tick);
+      }
+    };
+    PIXI.Ticker.shared.add(tick);
   }
 
   // no bump animation in new attack flow
