@@ -56,6 +56,5 @@ Core Reward Popup is a feedback overlay shown when the player successfully extra
 ---
 
 ## 7. Dependencies
-- Asset: `/assets/ui/reward_core_icon.webp`
 - VFX: `vfx.core.glow` (loop)
 - OverlayManager, EventLogger, GameStateStor
