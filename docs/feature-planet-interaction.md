@@ -6,7 +6,6 @@ Planet Interaction governs the moment-to-moment gameplay when the player engages
 ---
 
 ## 2. UX Integration
-
 - Triggered from: `GalaxyMap` → on planet tap
 - Screen: `MainScreen`
 - Components:
@@ -20,7 +19,6 @@ Planet Interaction governs the moment-to-moment gameplay when the player engages
 ---
 
 ## 3. Gameplay Logic
-
 ### 3.1. Selection
 - Swipe-to-select inside sector
 - Only unlocked planets are swipable
@@ -54,10 +52,30 @@ Planet Interaction governs the moment-to-moment gameplay when the player engages
 
 ## 4. States
 
-```ts
+ts
 interface Planet extends Entity {
   hp: number
   destroyed: boolean
   coreExtractable: boolean
   weaponHits: number
 }
+
+## 5. Visual Feedback
+- HP bar reduces in real-time
+- Flash on impact
+- Shaking and cracking at low HP
+- Core glows after destruction
+- Tooltip when hovering core (e.g. “Send unit to extract”)
+
+## 6. Edge Cases
+- Ammo = 0 → open feature-store.md popup for refill
+- Already destroyed planet → fallback to GalaxyMap
+- Core already dispatched → disable button
+- Dispatch cap reached → modal “No idle units available”
+
+## 7. Related Features
+- feature-weapon-system.md
+- feature-core-dispatch.md
+- feature-colony-system.md
+- feature-store.md
+- feature-galaxy-map.md
