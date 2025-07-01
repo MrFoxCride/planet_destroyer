@@ -11,10 +11,19 @@ export const CurrencyHUD = () => {
   }, []);
 
   return (
-    <div className="absolute top-0 left-0 right-0 flex justify-around text-white text-sm pointer-events-auto">
-      <span>Dust: {res.dust}</span>
-      <span>Cores: {res.cores}</span>
-      <span>Magmaton: {res.magmaton}</span>
+    <div className="absolute top-0 left-0 right-0 flex justify-between px-4 py-2 bg-black/60 text-white text-lg pointer-events-auto">
+      <div className="flex items-center gap-x-1">
+        <img src="/assets/ui/icon-dust.svg" className="w-6 h-6" />
+        <span>{res.dust}</span>
+      </div>
+      <div className="flex items-center gap-x-1">
+        <img src="/assets/ui/icon-core.svg" className="w-6 h-6" />
+        <span>{res.cores}</span>
+      </div>
+      <div className="flex items-center gap-x-1">
+        <img src="/assets/ui/icon-magmaton.svg" className="w-6 h-6" />
+        <span>{res.magmaton}</span>
+      </div>
     </div>
   );
 };

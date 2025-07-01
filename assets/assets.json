@@ -1,5 +1,13 @@
 {
   "ui": {
-    "placeholder": "ui/placeholder.svg"
+    "placeholder": "ui/placeholder.svg",
+    "iconDust": "ui/icon-dust.svg",
+    "iconCore": "ui/icon-core.svg",
+    "iconMagmaton": "ui/icon-magmaton.svg",
+    "navProfile": "ui/nav-profile.svg",
+    "navStore": "ui/nav-store.svg",
+    "navMain": "ui/nav-main.svg",
+    "navEarn": "ui/nav-earn.svg",
+    "navFriends": "ui/nav-friends.svg"
   }
 }
