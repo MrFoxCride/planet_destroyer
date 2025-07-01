@@ -53,6 +53,5 @@ USDT Reward Popup appears when the player destroys a Nebula and earns real-curre
 ---
 
 ## 7. Dependencies
-- Asset: `/assets/ui/reward_usdt_icon.webp`
 - VFX: `vfx.usdt.drop`
 - OverlayManager, WalletService, EventLogger, GameStateStore
