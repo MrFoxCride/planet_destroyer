@@ -165,6 +165,19 @@ export class GameStateStore {
     return amount;
   }
 
+  tapColonyDust() {
+    const p = this.state.planet;
+    if (!p.colony) return 0;
+    const available = Math.floor(p.storedDust || 0);
+    const amount = Math.min(5, available);
+    if (amount <= 0) return 0;
+    p.storedDust -= amount;
+    this.addDust(amount, 'colonyTap');
+    this.emit('flyout', { amount });
+    this.emit('update', this.state);
+    return amount;
+  }
+
   collectCore() {
     const p = this.state.planet;
     if (!p.coreExtractable) return false;

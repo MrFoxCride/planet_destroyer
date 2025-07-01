@@ -29,6 +29,7 @@ class WeaponSystem {
   applyHit(damage) {
     store.damagePlanet(damage);
     store.addDust(1, 'attack');
+    store.emit('flyout', { amount: 1 });
   }
 
   addAmmo(amount) {

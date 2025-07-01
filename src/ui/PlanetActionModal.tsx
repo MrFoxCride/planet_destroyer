@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { store } from '../core/GameEngine.js';
 import { ModalButton } from './ModalButton.tsx';
 
 export const PlanetActionModal = () => {
-  const planet = store.get().planet;
+  const [planet, setPlanet] = useState(store.get().planet);
+
+  useEffect(() => {
+    const cb = (s: any) => setPlanet({ ...s.planet });
+    store.on('update', cb);
+    return () => store.off('update', cb);
+  }, []);
+
   if (planet.choiceMade || planet.destroyed || planet.colony) return null;
   return (
     <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-[200] pointer-events-auto">
