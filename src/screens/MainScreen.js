@@ -18,6 +18,13 @@ export class MainScreen extends PIXI.Container {
     PIXI.Ticker.shared.add(this.animateIn, this);
     this.addChild(this.planetContainer);
 
+    this.glow = new PIXI.Graphics();
+    this.glow.beginFill(0x6666ff, 0.4);
+    this.glow.drawCircle(0, 0, this.radius + 10);
+    this.glow.endFill();
+    this.glow.filters = [new PIXI.filters.BlurFilter(8)];
+    this.planetContainer.addChild(this.glow);
+
     this.planetGraphic = new PIXI.Graphics();
     this.planetContainer.addChild(this.planetGraphic);
 
@@ -39,6 +46,7 @@ export class MainScreen extends PIXI.Container {
     this.planetContainer.cursor = 'pointer';
     this.planetContainer.on('pointertap', () => {
       weaponSystem.fire();
+      this.bump();
     });
 
     this.updateView(store.get());
@@ -52,6 +60,10 @@ export class MainScreen extends PIXI.Container {
     this.planetGraphic.beginFill(p.destroyed ? 0x555555 : 0x8888ff);
     this.planetGraphic.drawCircle(0, 0, this.radius);
     this.planetGraphic.endFill();
+    this.glow.clear();
+    this.glow.beginFill(p.destroyed ? 0x444444 : 0x6666ff, 0.4);
+    this.glow.drawCircle(0, 0, this.radius + 10);
+    this.glow.endFill();
 
     const ratio = p.hp / p.maxHp;
     this.hpBar.clear();
@@ -76,6 +88,21 @@ export class MainScreen extends PIXI.Container {
     } else {
       this.planetContainer.scale.set(s);
       this.planetContainer.alpha = s;
+    }
+  }
+
+  bump() {
+    this.planetContainer.scale.set(1.1);
+    PIXI.Ticker.shared.add(this.restoreScale, this);
+  }
+
+  restoreScale(delta) {
+    const s = this.planetContainer.scale.x - 0.1 * delta;
+    if (s <= 1) {
+      this.planetContainer.scale.set(1);
+      PIXI.Ticker.shared.remove(this.restoreScale, this);
+    } else {
+      this.planetContainer.scale.set(s);
     }
   }
 }
