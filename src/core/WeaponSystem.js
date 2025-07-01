@@ -2,11 +2,19 @@ import { store } from './GameEngine.js';
 
 class WeaponSystem {
   constructor() {
-    this.weapon = {
-      damage: 10,
-      ammo: 10,
-      ammoMax: 10,
-    };
+    this.weapons = [
+      { id: 'blaster', name: 'Blaster', damage: 10, ammo: 10, ammoMax: 10 },
+      { id: 'laser', name: 'Laser', damage: 20, ammo: 5, ammoMax: 5 },
+    ];
+    this.weapon = this.weapons[0];
+  }
+
+  selectWeapon(id) {
+    const w = this.weapons.find((wp) => wp.id === id);
+    if (w) {
+      this.weapon = w;
+      store.emit('update', store.state);
+    }
   }
 
   fire() {

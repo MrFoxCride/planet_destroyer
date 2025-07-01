@@ -25,12 +25,12 @@ export const BottomNavBar = () => {
         return (
           <button
             key={btn.id}
-            className={`flex flex-col items-center flex-1 transition-transform ${isActive ? 'bg-indigo-700 font-bold scale-105' : ''}`}
+            className={`flex flex-col items-center flex-1 transition-transform min-w-[56px] py-1 ${isActive ? 'bg-indigo-700 font-bold scale-105' : ''}`}
             onClick={() => stateManager.goTo(btn.id)}
           >
             <img
               src={btn.icon}
-              className={`${isActive ? 'w-10 h-10' : 'w-8 h-8'} mb-1`}
+              className={`${isActive ? 'w-10 h-10' : 'w-8 h-8'} mb-1 transition-transform`}
             />
             <span className="text-xs">{btn.label}</span>
           </button>

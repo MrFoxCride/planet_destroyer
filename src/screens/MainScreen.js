@@ -20,22 +20,28 @@ export class MainScreen extends PIXI.Container {
 
     this.glow = new PIXI.Graphics();
     this.glow.beginFill(0x6666ff, 0.4);
-    this.glow.drawCircle(0, 0, this.radius + 10);
+    this.glow.drawCircle(0, 0, this.radius * 1.5);
     this.glow.endFill();
-    this.glow.filters = [new PIXI.filters.BlurFilter(8)];
+    this.glow.filters = [new PIXI.filters.BlurFilter(12)];
     this.planetContainer.addChild(this.glow);
 
     this.planetGraphic = new PIXI.Graphics();
     this.planetContainer.addChild(this.planetGraphic);
 
     this.hpBg = new PIXI.Graphics();
-    this.hpBg.beginFill(0x333333);
-    this.hpBg.drawRect(-this.radius, -this.radius - 20, this.radius * 2, 12);
+    this.hpBg.beginFill(0x222222, 0.8);
+    this.hpBg.lineStyle(2, 0xffffff);
+    this.hpBg.drawRoundedRect(-this.radius, -this.radius - 24, this.radius * 2, 16, 8);
     this.hpBg.endFill();
     this.planetContainer.addChild(this.hpBg);
 
     this.hpBar = new PIXI.Graphics();
     this.planetContainer.addChild(this.hpBar);
+
+    this.hpText = new PIXI.Text('', { fill: 'white', fontSize: 16 });
+    this.hpText.anchor.set(0.5);
+    this.hpText.y = -this.radius - 16;
+    this.planetContainer.addChild(this.hpText);
 
     this.nameLabel = new PIXI.Text('', { fill: 'white', fontSize: 20 });
     this.nameLabel.anchor.set(0.5);
@@ -62,14 +68,15 @@ export class MainScreen extends PIXI.Container {
     this.planetGraphic.endFill();
     this.glow.clear();
     this.glow.beginFill(p.destroyed ? 0x444444 : 0x6666ff, 0.4);
-    this.glow.drawCircle(0, 0, this.radius + 10);
+    this.glow.drawCircle(0, 0, this.radius * 1.5);
     this.glow.endFill();
 
     const ratio = p.hp / p.maxHp;
     this.hpBar.clear();
     this.hpBar.beginFill(0xff4444);
-    this.hpBar.drawRect(-this.radius, -this.radius - 20, this.radius * 2 * ratio, 12);
+    this.hpBar.drawRoundedRect(-this.radius, -this.radius - 24, this.radius * 2 * ratio, 16, 8);
     this.hpBar.endFill();
+    this.hpText.text = `${p.hp}/${p.maxHp}`;
 
     this.nameLabel.text = p.name;
   }
