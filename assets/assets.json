@@ -4,6 +4,8 @@
     "iconDust": "ui/icon-dust.svg",
     "iconCore": "ui/icon-core.svg",
     "iconMagmaton": "ui/icon-magmaton.svg",
+    "iconAmmo": "ui/icon-ammo.svg",
+    "bgStars": "ui/bg-stars.svg",
     "navProfile": "ui/nav-profile.svg",
     "navStore": "ui/nav-store.svg",
     "navMain": "ui/nav-main.svg",

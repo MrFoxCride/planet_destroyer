@@ -32,7 +32,7 @@ function UI() {
   }, []);
 
   return (
-    <div className="absolute inset-0 flex flex-col justify-end pointer-events-none">
+    <div className="absolute inset-0 flex flex-col justify-between items-center pointer-events-none">
       <CurrencyHUD />
       <WeaponPanel />
       {dustReward !== null && (
