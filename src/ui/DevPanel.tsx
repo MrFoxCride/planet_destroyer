@@ -10,14 +10,14 @@ export const DevPanel = () => {
   return (
     <>
       <button
-        className="fixed bottom-4 right-4 w-12 h-12 rounded-full bg-purple-600 text-white z-[400] pointer-events-auto opacity-0"
+        className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-purple-600 text-white z-[400] pointer-events-auto opacity-0"
         onClick={() => setOpen(true)}
       >
         Dev
       </button>
       {open && (
         <div
-          className="fixed inset-0 z-[400] bg-black/50 flex items-center justify-center"
+          className="absolute inset-0 z-[400] bg-black/50 flex items-center justify-center"
           onClick={() => setOpen(false)}
         >
           <div
