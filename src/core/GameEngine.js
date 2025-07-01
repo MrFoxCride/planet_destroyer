@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js';
 import { GameStateStore } from './GameStateStore.js';
 import { StateManager } from './StateManager.js';
+import { DispatchSystem } from './DispatchSystem.js';
+import { NebulaSystem } from './NebulaSystem.js';
 
 export const store = new GameStateStore();
 
@@ -13,3 +15,5 @@ export const app = new PIXI.Application({
 });
 
 export const stateManager = new StateManager(store, app);
+export const dispatchSystem = new DispatchSystem(store);
+export const nebulaSystem = new NebulaSystem(store);

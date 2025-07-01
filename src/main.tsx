@@ -1,7 +1,7 @@
 import './style.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { app, stateManager, store } from './core/GameEngine.js';
+import { app, stateManager, store, dispatchSystem, nebulaSystem } from './core/GameEngine.js';
 import { sectors as defaultSectors } from './data/galaxy.js';
 import { planetNames } from './data/planetNames.js';
 import { DevPanel } from './ui/DevPanel.tsx';
@@ -77,4 +77,12 @@ const root = ReactDOM.createRoot(document.getElementById('ui-layer'));
 root.render(<UI />);
 
 stateManager.goTo('MainScreen');
+
+setInterval(() => {
+  dispatchSystem.update();
+}, 1000);
+
+// expose for debugging
+window.dispatchSystem = dispatchSystem;
+window.nebulaSystem = nebulaSystem;
 

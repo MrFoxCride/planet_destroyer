@@ -16,6 +16,7 @@ export class GameStateStore {
         dust: 0,
         cores: 0,
         magmaton: 0,
+        usdt: 0,
       },
       sectors: [],
       ui: {
@@ -68,6 +69,26 @@ export class GameStateStore {
     this.state.resources.cores += amount;
     this.emit('reward:core', { amount, source });
     this.emit('update', this.state);
+  }
+
+  addMagmaton(amount, source = 'iap') {
+    this.state.resources.magmaton += amount;
+    this.emit('reward:magmaton', { amount, source });
+    this.emit('update', this.state);
+  }
+
+  addUSDT(amount, source = 'nebula') {
+    this.state.resources.usdt += amount;
+    this.emit('reward:usdt', { amount, source });
+    this.emit('update', this.state);
+  }
+
+  spend(resource, amount) {
+    if (this.state.resources[resource] === undefined) return false;
+    if (this.state.resources[resource] < amount) return false;
+    this.state.resources[resource] -= amount;
+    this.emit('update', this.state);
+    return true;
   }
 
   selectPlanet(ent) {

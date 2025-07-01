@@ -29,9 +29,9 @@ export const DevPanel = () => {
             <button className="absolute top-2 right-2" onClick={() => setOpen(false)}>✕</button>
             <button
               className="bg-blue-500 px-2 py-1"
-              onClick={() => store.addDust(100, 'dev')}
+              onClick={() => store.addDust(1000, 'dev')}
             >
-              Add Dust
+              +1000 Dust
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
@@ -47,9 +47,15 @@ export const DevPanel = () => {
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
-              onClick={() => store.addCore(10, 'dev')}
+              onClick={() => store.addMagmaton(100, 'dev')}
             >
-              Add Cores
+              +100 Magmaton
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.addCore(100, 'dev')}
+            >
+              +100 Core
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
