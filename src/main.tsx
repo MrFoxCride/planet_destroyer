@@ -21,7 +21,9 @@ function UI() {
   const [coreReward, setCoreReward] = React.useState<number | null>(null);
 
   React.useEffect(() => {
-    const dustCb = ({ amount }: any) => setDustReward(amount);
+    const dustCb = ({ amount, source }: any) => {
+      if (source !== 'attack') setDustReward(amount);
+    };
     const coreCb = ({ amount }: any) => setCoreReward(amount);
     store.on('reward:dust', dustCb);
     store.on('reward:core', coreCb);
