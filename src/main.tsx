@@ -8,6 +8,7 @@ import { DevPanel } from './ui/DevPanel.tsx';
 import { BottomNavBar } from './ui/BottomNavBar.tsx';
 import { CurrencyHUD } from './ui/CurrencyHUD.tsx';
 import { WeaponPanel } from './ui/WeaponPanel.tsx';
+import { PlanetHUD } from './ui/PlanetHUD.tsx';
 import { GalaxyButton } from './ui/GalaxyButton.tsx';
 import { RewardDustPopup } from './ui/RewardDustPopup.tsx';
 import { RewardCorePopup } from './ui/RewardCorePopup.tsx';
@@ -84,8 +85,9 @@ function UI() {
   return (
     <div className="absolute inset-0 flex flex-col justify-between items-center pointer-events-none">
       <CurrencyHUD />
-      <WeaponPanel />
+      <PlanetHUD />
       <ExtractionPanel />
+      <WeaponPanel />
       <ColonyPanel />
       <GalaxyButton />
       <PlanetActionModal />
