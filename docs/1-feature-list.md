@@ -576,3 +576,13 @@ Planet Destroyer — Feature Tree (Full Granularity)
 |   |   |-- 17.1.5. PrivacySettings (visibility, consent, data management)
 |   |   |-- 17.1.6. State: Locked, Editing, Error, Updated, VIPOnly, AwaitingVerification
 |   |   |-- 17.1.7. PublicProfileView (other users, sharing, copy ID)
+|
+|-- 18. Settings & Preferences
+|   |-- 18.1. SettingsScreen
+|   |   |-- 18.1.1. General (sound, vibration, language, notifications)
+|   |   |-- 18.1.2. Account (link Telegram, device sync, recovery, logout, delete)
+|   |   |-- 18.1.3. Privacy (visibility, GDPR, data consent, export/import)
+|   |   |-- 18.1.4. Support (FAQ, contact, feedback, bug report)
+|   |   |-- 18.1.5. Legal (user agreement, privacy policy, terms, updates)
+|   |   |-- 18.1.6. State: Editing, Error, Pending, Saved, RequiresUpdate
+|   |   |-- 18.1.7. ForceUpdate, Recovery, DataMigration triggers
