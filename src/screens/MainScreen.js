@@ -4,6 +4,7 @@ import { store, stateManager } from '../core/GameEngine.js';
 import { weaponSystem } from '../core/WeaponSystem.js';
 import { PlanetMask } from '../core/PlanetMask.js';
 import { BrushManager } from '../core/BrushManager.js';
+import { getEntitySize } from '../core/LayoutUtils.js';
 
 export class MainScreen extends PIXI.Container {
   constructor(app) {
@@ -11,8 +12,8 @@ export class MainScreen extends PIXI.Container {
     this.screenId = 'MainScreen';
 
     const { width, height } = app.renderer;
-    const dim = Math.min(width, height);
-    this.radius = Math.max(dim * 0.28, 114);
+    const size = getEntitySize(width, height, 0.56);
+    this.radius = Math.max(size / 2, 114);
     this.app = app;
 
     this.planetContainer = new PIXI.Container();
