@@ -11,7 +11,8 @@ export class MainScreen extends PIXI.Container {
     this.screenId = 'MainScreen';
 
     const { width, height } = app.renderer;
-    this.radius = Math.max(width * 0.28, 114);
+    const dim = Math.min(width, height);
+    this.radius = Math.max(dim * 0.28, 114);
     this.app = app;
 
     this.planetContainer = new PIXI.Container();

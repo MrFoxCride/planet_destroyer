@@ -36,7 +36,7 @@ export class SectorMap extends PIXI.Container {
     const zoneW = zoneRight - zoneLeft;
     const zoneH = zoneBottom - zoneTop;
 
-    const radius = 24;
+    const radius = Math.min(zoneW, zoneH) * 0.045;
     sector.entities.forEach((ent) => {
       const x = zoneLeft + (ent.position.x / 100) * zoneW;
       const y = zoneTop + (ent.position.y / 100) * zoneH;

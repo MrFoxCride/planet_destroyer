@@ -3,8 +3,24 @@ import { store } from './GameEngine.js';
 class WeaponSystem {
   constructor() {
     this.weapons = [
-      { id: 'blaster', name: 'Blaster', damage: 10, ammo: 10, ammoMax: 10 },
-      { id: 'laser', name: 'Laser', damage: 20, ammo: 5, ammoMax: 5 },
+      {
+        id: 'blaster',
+        name: 'Blaster',
+        damage: 10,
+        ammo: 10,
+        ammoMax: 10,
+        cost: 500,
+        currency: 'dust',
+      },
+      {
+        id: 'laser',
+        name: 'Laser',
+        damage: 20,
+        ammo: 5,
+        ammoMax: 5,
+        cost: 2,
+        currency: 'core',
+      },
     ];
     this.weapon = this.weapons[0];
   }
