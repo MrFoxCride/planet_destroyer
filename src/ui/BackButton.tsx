@@ -14,7 +14,8 @@ export const BackButton = () => {
 
   return (
     <button
-      className="absolute top-14 left-4 w-12 h-12 flex items-center justify-center z-60 pointer-events-auto"
+      className="absolute left-4 w-12 h-12 flex items-center justify-center z-60 pointer-events-auto"
+      style={{ top: 'calc(var(--hud-height) + 20px)' }}
       onClick={() => stateManager.goBack()}
     >
       <img src="/assets/ui/icon-back.svg" className="w-8 h-8 drop-shadow" />
