@@ -23,6 +23,8 @@ import { ArsenalWindow } from './ui/ArsenalWindow.tsx';
 
 const isDev = import.meta.env.DEV;
 
+const isDev = import.meta.env.DEV;
+
 const container = document.getElementById('canvas-container');
 container.appendChild(app.view);
 app.view.id = 'game-canvas';
