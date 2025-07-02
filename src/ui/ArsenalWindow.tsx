@@ -3,7 +3,6 @@ import { ErrorBoundary } from './ErrorBoundary.tsx';
 import { weaponSystem } from '../core/WeaponSystem.js';
 import { store } from '../core/GameEngine.js';
 import { WeaponCard } from './WeaponCard.tsx';
-import { UnitCard } from './UnitCard.tsx';
 import { CreateUnitButton } from './CreateUnitButton.tsx';
 import { TimerBar } from './TimerBar.tsx';
 import { units as unitData } from '../data/units.js';
@@ -44,11 +43,13 @@ function UnitsTab() {
   const queue = Array.isArray(state.craftQueue) ? state.craftQueue : [];
   const units = state.units;
   const dispatches = Array.isArray(state.dispatches) ? state.dispatches : [];
-  const planet = state.planet;
-  const canDispatch =
-    planet.status === 'destroyed' && dispatches.length < 3;
 
   const canCraft = queue.length < 3;
+
+  const counts = units.reduce((acc: any, u: any) => {
+    acc[u.type] = (acc[u.type] || 0) + 1;
+    return acc;
+  }, {});
 
   return (
     <div className="flex flex-col gap-3">
@@ -73,6 +74,31 @@ function UnitsTab() {
           })}
         </div>
       )}
+      <div className="flex flex-col gap-2">
+        {unitData.map((u) => {
+          const currencyKey = u.currency === 'core' ? 'cores' : 'dust';
+          const afford = state.resources[currencyKey] >= u.cost;
+          const count = counts[u.type] || 0;
+          return (
+            <div key={u.type} className="bg-slate-800 p-2 rounded flex items-center gap-2">
+              <img src={u.icon} className="w-8 h-8" />
+              <span className="flex-1 text-white">{u.name}</span>
+              <span className="text-white text-sm">x{count}</span>
+              <div className="flex items-center gap-1" title={u.currency === 'core' ? 'Requires Cores' : 'Requires Dust'}>
+                <img
+                  src={u.currency === 'core' ? '/assets/ui/icon-core.svg' : '/assets/ui/icon-dust.svg'}
+                  className="w-5 h-5"
+                />
+                <span className="text-white text-sm">{u.cost}</span>
+              </div>
+              <CreateUnitButton
+                disabled={!canCraft || !afford}
+                onClick={() => store.startUnitCraft(u.type, u.cost, u.craftTime)}
+              />
+            </div>
+          );
+        })}
+      </div>
       {queue.length > 0 && (
         <div className="flex flex-col gap-2">
           {queue.map((q) => {
@@ -99,62 +125,19 @@ function UnitsTab() {
           })}
         </div>
       )}
-      <div className="flex flex-col gap-2">
-        {units.map((u, idx) => {
-          const busy = dispatches.some((d) => d.unitId === u.id);
-          return (
-            <UnitCard
-              key={idx}
-              unit={u}
-              onAction={canDispatch && !busy ? () => store.startDispatch(u.id, planet.id) : undefined}
-              actionLabel={busy ? 'Busy' : 'Dispatch'}
-              disabled={busy || !canDispatch}
-            />
-          );
-        })}
-      </div>
-      <div className="mt-2 flex flex-col gap-2">
-        {unitData.map((u) => {
-          const currencyKey = u.currency === 'core' ? 'cores' : 'dust';
-          const afford = state.resources[currencyKey] >= u.cost;
-          return (
-            <div key={u.type} className="flex items-center gap-2">
-              <img src={u.icon} className="w-8 h-8" />
-              <span className="text-white flex-1">{u.name}</span>
-              <div
-                className="flex items-center gap-1"
-                title={u.currency === 'core' ? 'Requires Cores' : 'Requires Dust'}
-              >
-                <img
-                  src={
-                    u.currency === 'core'
-                      ? '/assets/ui/icon-core.svg'
-                      : '/assets/ui/icon-dust.svg'
-                  }
-                  className="w-5 h-5"
-                />
-                <span className="text-white text-sm">{u.cost}</span>
-              </div>
-              <CreateUnitButton
-                disabled={!canCraft || !afford}
-                onClick={() =>
-                  store.startUnitCraft(u.type, u.cost, u.craftTime)
-                }
-              />
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 }
 
 export const ArsenalWindow = () => {
   const [screen, setScreen] = useState(store.get().currentScreen);
-  const [tab, setTab] = useState<'weapons' | 'units'>('weapons');
+  const [tab, setTab] = useState<'weapons' | 'units'>(store.get().ui.arsenalTab || 'weapons');
 
   useEffect(() => {
-    const cb = (s: any) => setScreen(s.currentScreen);
+    const cb = (s: any) => {
+      setScreen(s.currentScreen);
+      if (s.ui?.arsenalTab) setTab(s.ui.arsenalTab);
+    };
     store.on('update', cb);
     return () => store.off('update', cb);
   }, []);
@@ -171,13 +154,19 @@ export const ArsenalWindow = () => {
         <div className="flex justify-around sticky top-0 mb-4 bg-slate-900/90" style={{ paddingTop: 0 }}>
           <button
             className={`flex-1 py-2 ${tab === 'weapons' ? 'border-b-2 border-indigo-400 font-bold' : ''}`}
-            onClick={() => setTab('weapons')}
+            onClick={() => {
+              store.setArsenalTab('weapons');
+              setTab('weapons');
+            }}
           >
             Weapons
           </button>
           <button
             className={`flex-1 py-2 ${tab === 'units' ? 'border-b-2 border-indigo-400 font-bold' : ''}`}
-            onClick={() => setTab('units')}
+            onClick={() => {
+              store.setArsenalTab('units');
+              setTab('units');
+            }}
           >
             Units
           </button>

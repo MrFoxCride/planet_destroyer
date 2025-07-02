@@ -33,6 +33,7 @@ export class GameStateStore {
       sectors: [],
       ui: {
         unlockSectorId: null,
+        arsenalTab: 'weapons',
       },
     };
     this.listeners = new Map();
@@ -372,6 +373,11 @@ export class GameStateStore {
 
   closeUnlockModal() {
     this.state.ui.unlockSectorId = null;
+    this.emit('update', this.state);
+  }
+
+  setArsenalTab(tab) {
+    this.state.ui.arsenalTab = tab;
     this.emit('update', this.state);
   }
 
