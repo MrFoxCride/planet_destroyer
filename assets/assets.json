@@ -19,7 +19,8 @@
     "iconNebula": "ui/icon-nebula.svg",
     "iconColony": "ui/icon-colony.svg",
     "iconGalaxy": "ui/icon-galaxy.svg",
-    "iconBack": "ui/icon-back.svg"
+    "iconBack": "ui/icon-back.svg",
+    "iconDispatch": "ui/icon-dispatch.svg"
   },
   "units": {
     "extractorIcon": "sprites/unit_extractor_idle.png",

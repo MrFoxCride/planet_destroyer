@@ -29,6 +29,7 @@ export class GameStateStore {
       },
       units: [],
       craftQueue: [],
+      dispatches: [],
       sectors: [],
       ui: {
         unlockSectorId: null,
@@ -147,6 +148,7 @@ export class GameStateStore {
       ...defaults,
       ...data,
       craftQueue: Array.isArray(data.craftQueue) ? data.craftQueue : [],
+      dispatches: Array.isArray(data.dispatches) ? data.dispatches : [],
     };
     this.emit('update', this.state);
   }
@@ -196,24 +198,58 @@ export class GameStateStore {
     return amount;
   }
 
-  startExtraction(duration = 10000) {
-    const p = this.state.planet;
-    if (p.status !== 'destroyed') return false;
-    p.status = 'extracting';
-    p.coreExtractable = false;
-    p.extraction = { startedAt: Date.now(), duration };
+  startDispatch(unitId, planetId, duration = 30000) {
+    if (this.state.dispatches.length >= 3) return false;
+    const unit = this.state.units.find((u) => u.id === unitId);
+    if (!unit || unit.busy) return false;
+    const planet = this._findPlanet(planetId);
+    if (!planet || planet.status !== 'destroyed') return false;
+    const now = Date.now();
+    const inst = {
+      id: `${unitId}-${now}`,
+      unitId,
+      targetId: planetId,
+      startedAt: now,
+      duration,
+      doneAt: now + duration,
+      status: 'dispatching',
+    };
+    this.state.dispatches.push(inst);
+    unit.busy = true;
+    planet.status = 'extracting';
+    planet.coreExtractable = false;
+    planet.extraction = { startedAt: now, duration, dispatchId: inst.id };
+    EventLogger.logEvent('dispatch.start', { unit: unit.type, planetId });
     this.emit('update', this.state);
-    return true;
+    return inst.id;
   }
 
-  collectCore() {
-    const p = this.state.planet;
-    if (p.status !== 'extracting' || !p.extraction) return false;
+  finishAllDispatches() {
     const now = Date.now();
-    if (now < p.extraction.startedAt + p.extraction.duration) return false;
+    this.state.dispatches.forEach((d) => {
+      d.doneAt = now;
+      d.status = 'complete';
+    });
+    this.emit('update', this.state);
+  }
+
+  claimDispatch(id) {
+    const idx = this.state.dispatches.findIndex((d) => d.id === id);
+    if (idx === -1) return false;
+    const d = this.state.dispatches[idx];
+    if (d.status !== 'complete') return false;
+    const unit = this.state.units.find((u) => u.id === d.unitId);
+    if (unit) unit.busy = false;
+    const planet = this._findPlanet(d.targetId);
+    if (planet) {
+      planet.status = 'empty';
+      planet.extraction = null;
+      planet.coreExtractable = false;
+    }
+    this.state.dispatches.splice(idx, 1);
     this.addCore(1, 'dispatch');
-    p.status = 'empty';
-    p.extraction = null;
+    EventLogger.logEvent('dispatch.claim', { unit: unit?.type, planetId: d.targetId });
+    this.emit('dispatch:claimed', { unitId: d.unitId, planetId: d.targetId });
     this.emit('update', this.state);
     return true;
   }
@@ -299,31 +335,24 @@ export class GameStateStore {
     return { surface, glow };
   }
 
-  updateExtractions() {
-    const now = Date.now();
-    const completed = [];
-    this.state.sectors.forEach((sector) => {
-      sector.entities.forEach((p) => {
-        if (p.status === 'extracting' && p.extraction) {
-          if (now >= p.extraction.startedAt + p.extraction.duration) {
-            this.addCore(1, 'dispatch');
-            p.status = 'empty';
-            p.extraction = null;
-            p.coreExtractable = false;
-            completed.push({
-              sectorId: sector.id,
-              planetId: p.id,
-              name: p.name,
-              amount: 1,
-            });
-          }
-        }
-      });
-    });
-    if (completed.length) {
-      this.emit('update', this.state);
-      completed.forEach((c) => this.emit('extraction:completed', c));
+  _findPlanet(id) {
+    for (const s of this.state.sectors) {
+      const p = s.entities.find((e) => e.id === id);
+      if (p) return p;
     }
+    return null;
+  }
+
+  updateDispatches() {
+    const now = Date.now();
+    let changed = false;
+    this.state.dispatches.forEach((d) => {
+      if (d.status === 'dispatching' && now >= d.doneAt) {
+        d.status = 'complete';
+        changed = true;
+      }
+    });
+    if (changed) this.emit('update', this.state);
   }
 
   removePlanet(sectorId, planetId) {

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { weaponSystem } from '../core/WeaponSystem.js';
 import { store } from '../core/GameEngine.js';
 
-export const WeaponPanel = () => {
+interface Props {
+  onDispatch?: (planetId: string) => void;
+}
+
+export const WeaponPanel = ({ onDispatch }: Props) => {
   const [ammo, setAmmo] = useState(weaponSystem.weapon.ammo);
   const [planet, setPlanet] = useState(store.get().planet);
   const [screen, setScreen] = useState(store.get().currentScreen);
@@ -55,9 +59,7 @@ export const WeaponPanel = () => {
       {planet.status === 'destroyed' && (
         <button
           className="bg-green-600 text-white px-4 py-2 rounded w-32 h-12"
-          onClick={() => {
-            store.startExtraction();
-          }}
+          onClick={() => onDispatch && onDispatch(planet.id)}
         >
           Send Unit
         </button>

@@ -7,6 +7,7 @@ Timer Bar is a reusable UI component for displaying countdowns in a horizontal p
 
 ## 2. Usage Contexts
 - Dispatch mission countdowns (Planet Core extraction)
+- Dispatch list items in Arsenal and MainScreen
 - Active booster duration
 - Wheel of Fortune free ticket cooldown
 - Colony upkeep deadline

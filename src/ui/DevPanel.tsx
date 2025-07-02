@@ -71,9 +71,28 @@ export const DevPanel = () => {
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
-              onClick={() => store.startExtraction(1000)}
+              onClick={() => {
+                const u = store.state.units.find((uu) => !uu.busy);
+                if (u) store.startDispatch(u.id, store.state.planet.id, 1000);
+              }}
             >
-              Force Extract
+              Instant Dispatch
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.finishAllDispatches()}
+            >
+              Finish Dispatches
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() =>
+                store.state.dispatches.forEach((d) =>
+                  store.claimDispatch(d.id)
+                )
+              }
+            >
+              Claim Dispatches
             </button>
             <button
               className="bg-blue-500 px-2 py-1 mt-1"
