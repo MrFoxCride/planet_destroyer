@@ -81,6 +81,36 @@ export const DevPanel = () => {
             >
               Unlock all sectors
             </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.startUnitCraft('extractor', 0, 0)}
+            >
+              Instant create Extractor
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.startUnitCraft('robot', 0, 0)}
+            >
+              Instant create Robot
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.startUnitCraft('scout', 0, 0)}
+            >
+              Instant create Scout
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.finishAllCrafts()}
+            >
+              Instant finish queue
+            </button>
+            <button
+              className="bg-blue-500 px-2 py-1 mt-1"
+              onClick={() => store.addUnit('extractor')}
+            >
+              Add Extractor
+            </button>
             <div className="flex gap-1 mt-2">
               {BrushManager.brushes.map((b) => (
                 <button

@@ -1,3 +1,5 @@
+import { EventLogger } from './EventLogger.js';
+
 export class GameStateStore {
   constructor() {
     // runtime navigation state stored here
@@ -25,6 +27,8 @@ export class GameStateStore {
         magmaton: 0,
         usdt: 0,
       },
+      units: [],
+      craftQueue: [],
       sectors: [],
       ui: {
         unlockSectorId: null,
@@ -346,6 +350,70 @@ export class GameStateStore {
     this.state.ui.unlockSectorId = null;
     this.emit('update', this.state);
     return true;
+  }
+
+  startUnitCraft(type, cost, duration) {
+    if (this.state.craftQueue.length >= 3) return false;
+    if (this.state.craftQueue.some((c) => c.type === type && !c.collected))
+      return false;
+    if (this.state.resources.dust < cost) return false;
+    this.state.resources.dust -= cost;
+    const item = {
+      id: `${type}-${Date.now()}`,
+      type,
+      startedAt: Date.now(),
+      duration,
+      collected: false,
+      done: false,
+    };
+    this.state.craftQueue.push(item);
+    EventLogger.logEvent('dispatch.create', { type });
+    this.emit('update', this.state);
+    return item.id;
+  }
+
+  updateCraftQueue() {
+    const now = Date.now();
+    const completed = [];
+    this.state.craftQueue.forEach((c) => {
+      if (!c.done && now >= c.startedAt + c.duration) {
+        c.done = true;
+        completed.push(c);
+      }
+    });
+    if (completed.length) {
+      this.emit('update', this.state);
+      completed.forEach((c) => {
+        EventLogger.logEvent('dispatch.finish', { type: c.type });
+        this.emit('craft:completed', c);
+      });
+    }
+  }
+
+  claimCraft(id) {
+    const idx = this.state.craftQueue.findIndex((c) => c.id === id);
+    if (idx === -1) return false;
+    const item = this.state.craftQueue[idx];
+    if (!item.done) return false;
+    this.state.craftQueue.splice(idx, 1);
+    this.state.units.push({ id: `${item.type}-${Date.now()}`, type: item.type, level: 1 });
+    EventLogger.logEvent('dispatch.claim', { type: item.type });
+    this.emit('update', this.state);
+    return true;
+  }
+
+  addUnit(type) {
+    this.state.units.push({ id: `${type}-${Date.now()}`, type, level: 1 });
+    this.emit('update', this.state);
+  }
+
+  finishAllCrafts() {
+    const now = Date.now();
+    this.state.craftQueue.forEach((c) => {
+      c.startedAt = now - c.duration;
+      c.done = true;
+    });
+    this.updateCraftQueue();
   }
 
   unlockAllSectors() {
