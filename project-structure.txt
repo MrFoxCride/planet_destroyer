@@ -1,3 +1,7 @@
+Структура папок тома Foxish
+Серийный номер тома: 6E5A-819F
+D:.
+|   .env
 |   .gitignore
 |   agents.md
 |   index.html
@@ -8,13 +12,47 @@
 |   README.md
 |   structure.txt
 |   tailwind.config.js
+|   tsconfig.json
 |   vite.config.js
 |   
 +---assets
 |   |   .gitkeep
+|   |   assets.json
 |   |   
-|   \---sprites
-|           .gitkeep
+|   +---animations
+|   |       .gitkeep
+|   |       unit_extractor_craft.json
+|   |       unit_robot_craft.json
+|   |       unit_scout_craft.json
+|   |       
+|   +---sprites
+|   |       .gitkeep
+|   |       unit_extractor_idle.png
+|   |       unit_robot_idle.png
+|   |       unit_scout_idle.png
+|   |       
+|   \---ui
+|           bg-stars.svg
+|           bg_stars.svg
+|           icon-ammo.svg
+|           icon-back.svg
+|           icon-colony.svg
+|           icon-core.svg
+|           icon-dev.svg
+|           icon-dust.svg
+|           icon-galaxy.svg
+|           icon-lock.svg
+|           icon-magmaton.svg
+|           icon-nebula.svg
+|           icon-planet.svg
+|           icon-usdt.svg
+|           nav-earn.svg
+|           nav-friends.svg
+|           nav-main.svg
+|           nav-profile.svg
+|           nav-store.svg
+|           placeholder.svg
+|           weapon_placeholder.svg
 |           
 +---docs
 |   |   0-vision.md
@@ -63,6 +101,7 @@
 |       |   tab-weapons.md
 |       |   
 |       \---popups
+|               component-create-unit-button.md
 |               component-modal-button.md
 |               component-reward-item.md
 |               component-timer-bar.md
@@ -87,28 +126,70 @@
 |       .gitkeep
 |       
 \---src
-    |   main.js
-    |   stateManager.js
+    |   main.tsx
     |   style.css
     |   
     +---core
     |       AssetLoader.js
+    |       BrushManager.js
+    |       ColonySystem.js
+    |       DispatchSystem.js
+    |       EventLogger.js
+    |       GameEngine.js
+    |       GameStateStore.js
+    |       LayoutUtils.js
+    |       NebulaSystem.js
+    |       PlanetInteraction.js
+    |       PlanetMask.js
     |       SaveManager.js
+    |       StateManager.js
     |       TimerManager.js
+    |       WeaponSystem.js
     |       
     +---data
     |       .gitkeep
+    |       BuildFlags.js
+    |       galaxy.js
+    |       planetNames.js
+    |       units.js
     |       
     +---screens
     |       ArsenalLab.js
+    |       Earn.js
     |       FortuneWheel.js
+    |       Friends.js
+    |       GalaxyMap.js
     |       Leaderboard.js
     |       LoadingScreen.js
+    |       MainScreen.js
     |       PlanetField.js
+    |       Profile.js
+    |       SectorMap.js
+    |       Store.js
     |       Upgrades.js
     |       
     \---ui
             .gitkeep
-            UnitCard.js
-            WeaponCard.js
+            ArsenalWindow.tsx
+            BackButton.tsx
+            BottomNavBar.tsx
+            ColonyPanel.tsx
+            CreateUnitButton.tsx
+            CurrencyHUD.tsx
+            DevPanel.tsx
+            DustFlyout.tsx
+            ErrorBoundary.tsx
+            ExtractionPanel.tsx
+            GalaxyButton.tsx
+            ModalButton.tsx
+            PlanetActionModal.tsx
+            PlanetHUD.tsx
+            RewardCorePopup.tsx
+            RewardDustPopup.tsx
+            TimerBar.tsx
+            UnitCard.tsx
+            UnitReadyPopup.tsx
+            UnlockSectorModal.tsx
+            WeaponCard.tsx
+            WeaponPanel.tsx
             
