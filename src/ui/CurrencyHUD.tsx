@@ -3,14 +3,18 @@ import { store, stateManager } from '../core/GameEngine.js';
 
 export const CurrencyHUD = () => {
   const [res, setRes] = useState(store.get().resources);
+  const [screen, setScreen] = useState(store.get().currentScreen);
 
   useEffect(() => {
     const cb = (s: any) => setRes({ ...s.resources });
+    const screenCb = (s: any) => setScreen(s.currentScreen);
     store.on('update', cb);
     return () => {
       store.off('update', cb);
     };
   }, []);
+
+  if (screen !== 'MainScreen') return null;
 
   return (
     <div className="absolute top-0 left-0 right-0 flex justify-between items-center px-2 py-3 bg-slate-800/70 border-b border-slate-700 pointer-events-auto animate-fadeIn">
