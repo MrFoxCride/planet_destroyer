@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.debug-outline {
+  outline: 1px dashed rgba(255, 0, 0, 0.6);
+}
