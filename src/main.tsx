@@ -20,6 +20,8 @@ import { DustFlyout } from './ui/DustFlyout.tsx';
 import { ExtractionPanel } from './ui/ExtractionPanel.tsx';
 import { UnitReadyPopup } from './ui/UnitReadyPopup.tsx';
 
+const isDev = import.meta.env.DEV;
+
 const container = document.getElementById('canvas-container');
 container.appendChild(app.view);
 app.view.id = 'game-canvas';
@@ -43,6 +45,7 @@ function UI() {
   const [unlockId, setUnlockId] = React.useState<string | null>(null);
   const [flyouts, setFlyouts] = React.useState<{ id: number; amount: number; idx: number }[]>([]);
   const flyoutIndex = React.useRef(0);
+  const [screen, setScreen] = React.useState(store.get().currentScreen);
 
   React.useEffect(() => {
     const dustCb = ({ amount, source }: any) => {
@@ -71,9 +74,11 @@ function UI() {
       setExtractionInfo(info);
     };
     const uiCb = (s: any) => setUnlockId(s.ui.unlockSectorId);
+    const screenCb = (s: any) => setScreen(s.currentScreen);
     store.on('reward:dust', dustCb);
     store.on('reward:core', coreCb);
     store.on('update', uiCb);
+    store.on('update', screenCb);
     store.on('flyout', flyoutCb);
     const craftCb = (info: any) => setUnitReady(info);
     store.on('extraction:completed', extractionCb);
@@ -82,6 +87,7 @@ function UI() {
       store.off('reward:dust', dustCb);
       store.off('reward:core', coreCb);
       store.off('update', uiCb);
+      store.off('update', screenCb);
       store.off('flyout', flyoutCb);
       store.off('extraction:completed', extractionCb);
       store.off('craft:completed', craftCb);
@@ -89,15 +95,27 @@ function UI() {
   }, []);
 
   return (
-    <div className="absolute inset-0 flex flex-col justify-between items-center pointer-events-none">
-      <CurrencyHUD />
-      <BackButton />
-      <PlanetHUD />
-      <ExtractionPanel />
-      <WeaponPanel />
-      <ColonyPanel />
-      <GalaxyButton />
-      <PlanetActionModal />
+    <div className="absolute inset-0 pointer-events-none">
+      {screen === 'MainScreen' && (
+        <div
+          id="hud-layer"
+          className={`${isDev ? 'debug-outline' : ''} absolute top-0 left-0 right-0 pointer-events-none`}
+          style={{ height: 'var(--hud-height)' }}
+        >
+          <CurrencyHUD />
+          <PlanetHUD />
+        </div>
+      )}
+      <div
+        id="modal-layer"
+        className="absolute inset-0 pointer-events-none"
+      >
+        <BackButton />
+        <ExtractionPanel />
+        <WeaponPanel />
+        <ColonyPanel />
+        <GalaxyButton />
+        <PlanetActionModal />
       {flyouts.map((f) => (
         <DustFlyout key={f.id} amount={f.amount} index={f.idx} />
       ))}
@@ -133,8 +151,15 @@ function UI() {
           onUnlock={() => store.unlockSector(unlockId)}
         />
       )}
-      <DevPanel />
-      <BottomNavBar />
+        <DevPanel />
+      </div>
+      <div
+        id="navbar-layer"
+        className={`${isDev ? 'debug-outline' : ''} absolute bottom-0 left-0 right-0 pointer-events-none`}
+        style={{ height: 'var(--navbar-height)' }}
+      >
+        <BottomNavBar />
+      </div>
     </div>
   );
 }
