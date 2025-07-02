@@ -1,7 +1,7 @@
 import './style.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { app, stateManager, store, dispatchSystem, nebulaSystem, colonySystem } from './core/GameEngine.js';
+import { app, stateManager, store, nebulaSystem, colonySystem } from './core/GameEngine.js';
 import { sectors as defaultSectors } from './data/galaxy.js';
 import { planetNames } from './data/planetNames.js';
 import { DevPanel } from './ui/DevPanel.tsx';
@@ -20,6 +20,8 @@ import { DustFlyout } from './ui/DustFlyout.tsx';
 import { ExtractionPanel } from './ui/ExtractionPanel.tsx';
 import { UnitReadyPopup } from './ui/UnitReadyPopup.tsx';
 import { ArsenalWindow } from './ui/ArsenalWindow.tsx';
+import { DispatchList } from './ui/DispatchList.tsx';
+import { DispatchModal } from './ui/DispatchModal.tsx';
 
 const isDev = import.meta.env.DEV;
 
@@ -51,6 +53,7 @@ function UI() {
   const [flyouts, setFlyouts] = React.useState<{ id: number; amount: number; idx: number }[]>([]);
   const flyoutIndex = React.useRef(0);
   const [screen, setScreen] = React.useState(store.get().currentScreen);
+  const [dispatchTarget, setDispatchTarget] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const dustCb = ({ amount, source }: any) => {
@@ -115,13 +118,14 @@ function UI() {
       >
         <BackButton />
         <ExtractionPanel />
-        <WeaponPanel />
+        <WeaponPanel onDispatch={(id) => setDispatchTarget(id)} />
         <ColonyPanel />
         <GalaxyButton />
         <PlanetActionModal />
-      {flyouts.map((f) => (
-        <DustFlyout key={f.id} amount={f.amount} index={f.idx} />
-      ))}
+        <DispatchList />
+        {flyouts.map((f) => (
+          <DustFlyout key={f.id} amount={f.amount} index={f.idx} />
+        ))}
       {dustReward !== null && (
         <RewardDustPopup amount={dustReward} onClose={() => setDustReward(null)} />
       )}
@@ -154,6 +158,9 @@ function UI() {
           onUnlock={() => store.unlockSector(unlockId)}
         />
       )}
+      {dispatchTarget && (
+        <DispatchModal planetId={dispatchTarget} onClose={() => setDispatchTarget(null)} />
+      )}
       <ArsenalWindow />
       <DevPanel />
       </div>
@@ -174,13 +181,12 @@ root.render(<UI />);
 stateManager.goTo('MainScreen');
 
 setInterval(() => {
-  dispatchSystem.update();
   colonySystem.update();
-  store.updateExtractions();
+  store.updateDispatches();
   store.updateCraftQueue();
 }, 1000);
 
 // expose for debugging
-window.dispatchSystem = dispatchSystem;
+window.nebulaSystem = nebulaSystem;
 window.nebulaSystem = nebulaSystem;
 

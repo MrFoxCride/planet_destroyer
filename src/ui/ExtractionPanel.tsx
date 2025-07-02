@@ -17,7 +17,7 @@ export const ExtractionPanel = () => {
         p.extraction &&
         Date.now() >= p.extraction.startedAt + p.extraction.duration
       ) {
-        store.updateExtractions();
+        store.updateDispatches();
       }
       frame = requestAnimationFrame(loop);
     };
@@ -41,6 +41,14 @@ export const ExtractionPanel = () => {
         <div className="bg-blue-500 h-3" style={{ width: `${progress * 100}%` }}></div>
       </div>
       <div className="text-white text-sm mt-1 animate-pulse">{remaining}s</div>
+      {remaining === 0 && (
+        <button
+          className="mt-1 bg-green-600 text-white px-2 py-1 rounded pointer-events-auto"
+          onClick={() => planet.extraction && store.claimDispatch(planet.extraction.dispatchId)}
+        >
+          Claim
+        </button>
+      )}
     </div>
   );
 };

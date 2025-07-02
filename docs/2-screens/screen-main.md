@@ -36,6 +36,7 @@ MainScreen is the core gameplay UI shown after entering a planet or Nebula. It‚Ä
 - **Central NavBar**: fixed bar (see global nav)
   - Center button = glowing planet icon
   - Highlights ‚ÄúMain‚Äù
+- **Dispatch List**: shows all active unit dispatches with timers and claim buttons
 
 ---
 
@@ -45,6 +46,7 @@ MainScreen is the core gameplay UI shown after entering a planet or Nebula. It‚Ä
 - On 0 HP:
   - Show Dust reward
   - Trigger dispatch panel for Core extraction
+  - Player selects a unit to dispatch
 
 ### 4.2. USDT Nebula
 - Integrity bar (not HP)
