@@ -218,3 +218,67 @@ Planet Destroyer — Feature Tree (Full Granularity)
 |   |   /-- 10.4.1. Seasonal content, weekly/monthly events
 |   |   /-- 10.4.2. Guilds/clans: formation, chat, shared goals
 |   |   /-- 10.4.3. Co-op mission, server-wide rewards, sync
+|
+|-- 11. Shop & Purchases
+|   |-- 11.1. Shop System
+|   |   |-- 11.1.1. CurrencyShop (Magmaton, Dust, Cores, USDT offers)
+|   |   |-- 11.1.2. BoosterShop (all booster types, bundle offers, timer/flash sale)
+|   |   |-- 11.1.3. SkinShop (weapon skins, UI themes, avatars, VIP exclusives)
+|   |   |-- 11.1.4. VIPShop (VIP packs, subscription, premium bundles)
+|   |   |-- 11.1.5. FlashSaleShop (time-limited, limited quantity, event-based)
+|   |   |-- 11.1.6. PurchaseHistory (transactions, restore, status)
+|   |   |-- 11.1.7. PaymentGateway (IAP, Telegram, Apple, Google, error recovery)
+|   |   |-- 11.1.8. All UI states: Loading, Error, OutOfStock, Timer, LimitedOffer, Success/Fail
+|
+|-- 12. Galaxy, Cluster & Archive
+|   |-- 12.1. GalaxyMap System
+|   |   |-- 12.1.1. Galaxy selector (active, archive, new, legendary)
+|   |   |-- 12.1.2. Multi-galaxy support, epoch/cycle switching
+|   |-- 12.2. ClusterMap System
+|   |   |-- 12.2.1. Cluster list, status (locked/unlocked/cleared/event/checkpoint)
+|   |   |-- 12.2.2. Cluster detail view (loot, path, status, route, hypercorridors)
+|   |   |-- 12.2.3. Cluster history, completion stats
+|   |-- 12.3. Archive & History
+|   |   |-- 12.3.1. ArchiveScreen (past galaxies, legendary colonies, meta-stats)
+|   |   |-- 12.3.2. Gallery/TrophyRoom (trophies, badges, meta-achievements)
+|   |   |-- 12.3.3. Legendary Colony progression, meta-bonus display
+|
+|-- 13. USDT, KYC & Payment Flow
+|   |-- 13.1. USDT Wallet System
+|   |   |-- 13.1.1. Balance, withdraw request, pending, limits, status
+|   |   |-- 13.1.2. History (all transactions, status, error, retry)
+|   |-- 13.2. KYC Flow
+|   |   |-- 13.2.1. Document upload, progress, moderation, fail/retry
+|   |   |-- 13.2.2. State: pending, approved, declined, re-request
+|   |-- 13.3. Payment Gateway Integration
+|   |   |-- 13.3.1. Purchase flow (Telegram, Apple, Google)
+|   |   |-- 13.3.2. Restore purchases, refund, error, support, success
+|   |-- 13.4. All UI states: Loading, Error, Locked, AwaitingApproval, Pending, Success, Fail
+|
+|-- 14. Tutorial, Help, Recovery, Legal
+|   |-- 14.1. Tutorial System
+|   |   |-- 14.1.1. FTUE, onboarding wizard, bubbles, contextual tips
+|   |   |-- 14.1.2. Replay tutorial, skip, reset progress
+|   |-- 14.2. FAQ & Help System
+|   |   |-- 14.2.1. Search, popular topics, feedback/ticket, support integration
+|   |-- 14.3. Recovery & Sync
+|   |   |-- 14.3.1. Cloud sync, force recovery, migration, backup/restore
+|   |   |-- 14.3.2. Error, conflict, restore prompt
+|   |-- 14.4. Legal System
+|   |   |-- 14.4.1. User agreement, privacy, GDPR, consent screen, updates
+|   |   |-- 14.4.2. State: Required, Completed, Pending, UpdateNeeded
+|
+|-- 15. Notification & Status Center
+|   |-- 15.1. Notification Center
+|   |   |-- 15.1.1. Push notifications, history, event log, read/unread
+|   |   |-- 15.1.2. Promo/alert/banner, FOMO triggers
+|   |-- 15.2. Status Center
+|   |   |-- 15.2.1. All status: Timer, Error, Locked, Limited, VIP, OutOfScope, Awaiting, RequiresUpdate
+|   |   |-- 15.2.2. Overlay/modal for alerts, info, error, recovery
+|
+|-- 16. UI States & Technical Coverage
+|   |-- 16.1. UI States (for any screen/feature)
+|   |   |-- 16.1.1. Locked, Error, Loading, Timer, VIP-only, Limited, OutOfScope, RequiresUpdate, RequiresPurchase, AwaitingKYC
+|   |-- 16.2. Technical Components
+|   |   |-- 16.2.1. Loader, progress bar, offline handler, force update, GDPR/consent, data-migration
+|   |   |-- 16.2.2. Cloud backup, recovery, import/export, debug logging
