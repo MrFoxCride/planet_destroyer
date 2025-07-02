@@ -101,6 +101,16 @@ export class MainScreen extends PIXI.Container {
     this.colonyIcon.visible = false;
     this.planetContainer.addChild(this.colonyIcon);
 
+    // hide built-in labels and bars, overlay handled by React HUD
+    this.hpBg.visible = false;
+    this.hpBar.visible = false;
+    this.hpText.visible = false;
+    this.dustBg.visible = false;
+    this.dustBar.visible = false;
+    this.dustText.visible = false;
+    this.nameLabel.visible = false;
+    this.colonyIcon.visible = false;
+
     this.planetContainer.eventMode = 'static';
     this.planetContainer.cursor = 'pointer';
     this.planetContainer.on('pointertap', () => {

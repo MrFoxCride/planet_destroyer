@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { DropShadowFilter } from '@pixi/filter-drop-shadow';
 import { store } from '../core/GameEngine.js';
 
 export class GalaxyMap extends PIXI.Container {
@@ -12,35 +11,9 @@ export class GalaxyMap extends PIXI.Container {
     this.mapLayer = new PIXI.Container();
     this.addChild(this.mapLayer);
 
-    this.createBackButton();
     this.renderMap(store.get());
     this.updateCb = (s) => this.renderMap(s);
     store.on('update', this.updateCb);
-  }
-
-  createBackButton() {
-    const PADDING = 24;
-    const HUD_HEIGHT = 48;
-    const btnSize = 36;
-    const hit = new PIXI.Graphics();
-    hit.beginFill(0x000000, 0);
-    hit.drawRect(0, 0, 48, 48);
-    hit.endFill();
-    hit.x = PADDING;
-    hit.y = HUD_HEIGHT;
-    hit.eventMode = 'static';
-    hit.cursor = 'pointer';
-    hit.on('pointertap', () => this.manager.goBack());
-
-    const icon = PIXI.Sprite.from('/assets/ui/icon-back.svg');
-    icon.width = btnSize;
-    icon.height = btnSize;
-    icon.x = 6;
-    icon.y = 6;
-    icon.tint = 0xffffff;
-    icon.filters = [new DropShadowFilter({ blur: 2, alpha: 0.8 })];
-    hit.addChild(icon);
-    this.addChild(hit);
   }
 
   renderMap(state) {
