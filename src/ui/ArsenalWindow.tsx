@@ -10,10 +10,22 @@ import { units as unitData } from '../data/units.js';
 const isDev = import.meta.env.DEV;
 
 function WeaponsTab() {
+  const [resources, setResources] = useState(store.get().resources);
+  useEffect(() => {
+    const cb = (s: any) => setResources({ ...s.resources });
+    store.on('update', cb);
+    return () => store.off('update', cb);
+  }, []);
+
   return (
     <div className="flex flex-col gap-2">
       {weaponSystem.weapons.map((w) => (
-        <WeaponCard key={w.id} weapon={w} onSelect={() => weaponSystem.selectWeapon(w.id)} />
+        <WeaponCard
+          key={w.id}
+          weapon={w}
+          onBuy={() => weaponSystem.selectWeapon(w.id)}
+          disabled={resources[w.currency === 'core' ? 'cores' : 'dust'] < w.cost}
+        />
       ))}
     </div>
   );
@@ -67,16 +79,36 @@ function UnitsTab() {
         ))}
       </div>
       <div className="mt-2 flex flex-col gap-2">
-        {unitData.map((u) => (
-          <div key={u.type} className="flex items-center gap-2">
-            <img src={u.icon} className="w-8 h-8" />
-            <span className="text-white flex-1">{u.name}</span>
-            <CreateUnitButton
-              disabled={!canCraft || state.resources.dust < u.cost}
-              onClick={() => store.startUnitCraft(u.type, u.cost, u.craftTime)}
-            />
-          </div>
-        ))}
+        {unitData.map((u) => {
+          const currencyKey = u.currency === 'core' ? 'cores' : 'dust';
+          const afford = state.resources[currencyKey] >= u.cost;
+          return (
+            <div key={u.type} className="flex items-center gap-2">
+              <img src={u.icon} className="w-8 h-8" />
+              <span className="text-white flex-1">{u.name}</span>
+              <div
+                className="flex items-center gap-1"
+                title={u.currency === 'core' ? 'Requires Cores' : 'Requires Dust'}
+              >
+                <img
+                  src={
+                    u.currency === 'core'
+                      ? '/assets/ui/icon-core.svg'
+                      : '/assets/ui/icon-dust.svg'
+                  }
+                  className="w-5 h-5"
+                />
+                <span className="text-white text-sm">{u.cost}</span>
+              </div>
+              <CreateUnitButton
+                disabled={!canCraft || !afford}
+                onClick={() =>
+                  store.startUnitCraft(u.type, u.cost, u.craftTime)
+                }
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
