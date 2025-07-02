@@ -18,7 +18,6 @@ import { PlanetActionModal } from './ui/PlanetActionModal.tsx';
 import { ColonyPanel } from './ui/ColonyPanel.tsx';
 import { DustFlyout } from './ui/DustFlyout.tsx';
 import { ExtractionPanel } from './ui/ExtractionPanel.tsx';
-import { DispatchCenterPanel } from './ui/DispatchCenterPanel.tsx';
 import { UnitReadyPopup } from './ui/UnitReadyPopup.tsx';
 
 const container = document.getElementById('canvas-container');
@@ -134,7 +133,6 @@ function UI() {
           onUnlock={() => store.unlockSector(unlockId)}
         />
       )}
-      <DispatchCenterPanel />
       <DevPanel />
       <BottomNavBar />
     </div>

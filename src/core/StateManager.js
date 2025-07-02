@@ -5,6 +5,7 @@ import { Profile } from '../screens/Profile.js';
 import { Store } from '../screens/Store.js';
 import { Earn } from '../screens/Earn.js';
 import { Friends } from '../screens/Friends.js';
+import { ArsenalLab } from '../screens/ArsenalLab.js';
 
 const registry = {
   MainScreen,
@@ -13,6 +14,7 @@ const registry = {
   Profile,
   Store,
   Earn,
+  Arsenal: ArsenalLab,
   Friends,
 };
 

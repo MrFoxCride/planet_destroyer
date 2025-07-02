@@ -56,20 +56,10 @@ export class MainScreen extends PIXI.Container {
     this.effectLayer = new PIXI.Container();
     this.planetContainer.addChild(this.effectLayer);
 
+    // HP bar handled by React HUD only
     this.hpBg = new PIXI.Graphics();
-    this.hpBg.beginFill(0x222222, 0.8);
-    this.hpBg.lineStyle(2, 0xffffff);
-    this.hpBg.drawRoundedRect(-this.radius, -this.radius - 24, this.radius * 2, 16, 8);
-    this.hpBg.endFill();
-    this.planetContainer.addChild(this.hpBg);
-
     this.hpBar = new PIXI.Graphics();
-    this.planetContainer.addChild(this.hpBar);
-
     this.hpText = new PIXI.Text('', { fill: 'white', fontSize: 16 });
-    this.hpText.anchor.set(0.5);
-    this.hpText.y = -this.radius - 16;
-    this.planetContainer.addChild(this.hpText);
 
     this.dustBg = new PIXI.Graphics();
     this.dustBg.beginFill(0x222222, 0.8);
@@ -148,22 +138,7 @@ export class MainScreen extends PIXI.Container {
     this.glow.drawCircle(0, 0, this.radius * 1.2);
     this.glow.endFill();
 
-    const ratio = p.hp / p.maxHp;
-    this.hpBar.clear();
-    if (!p.colony) {
-      this.hpBar.beginFill(0xff4444);
-      this.hpBar.drawRoundedRect(
-        -this.radius,
-        -this.radius - 24,
-        this.radius * 2 * ratio,
-        16,
-        8
-      );
-      this.hpBar.endFill();
-    }
-    this.hpBg.visible = !p.colony;
-    this.hpText.visible = !p.colony;
-    this.hpText.text = `${p.hp}/${p.maxHp}`;
+    // hp bar handled by React HUD only
 
     this.dustBar.clear();
     if (p.colony) {
