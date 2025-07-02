@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { BlurFilter } from '@pixi/filter-blur';
 import { store } from '../core/GameEngine.js';
+import { getEntitySize } from '../core/LayoutUtils.js';
 
 export class SectorMap extends PIXI.Container {
   constructor(app, manager, params) {
@@ -36,7 +37,8 @@ export class SectorMap extends PIXI.Container {
     const zoneW = zoneRight - zoneLeft;
     const zoneH = zoneBottom - zoneTop;
 
-    const radius = Math.min(zoneW, zoneH) * 0.045;
+    const baseSize = getEntitySize(zoneW, zoneH, 0.09);
+    const radius = baseSize / 2;
     sector.entities.forEach((ent) => {
       const x = zoneLeft + (ent.position.x / 100) * zoneW;
       const y = zoneTop + (ent.position.y / 100) * zoneH;

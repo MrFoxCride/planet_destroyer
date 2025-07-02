@@ -8,12 +8,13 @@ import { SaveManager } from './SaveManager.js';
 
 export const store = new GameStateStore();
 
-const wrapper = document.getElementById('wrapper');
+const canvasContainer = document.getElementById('canvas-container');
 
 export const app = new PIXI.Application({
-  resizeTo: wrapper,
+  resizeTo: canvasContainer,
   backgroundColor: 0x000000,
   antialias: true,
+  autoDensity: true,
 });
 
 export const stateManager = new StateManager(store, app);

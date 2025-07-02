@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { store } from '../core/GameEngine.js';
+import { getEntitySize } from '../core/LayoutUtils.js';
 
 export class GalaxyMap extends PIXI.Container {
   constructor(app, manager) {
@@ -19,10 +20,10 @@ export class GalaxyMap extends PIXI.Container {
   renderMap(state) {
     this.mapLayer.removeChildren();
     const { width, height } = this.app.renderer;
-    const dim = Math.min(width, height);
+    const baseSize = getEntitySize(width, height);
     const count = state.sectors.length;
-    const ringRadius = dim * 0.35;
-    const radius = Math.max(36, dim * 0.09);
+    const ringRadius = baseSize * 0.35;
+    const radius = Math.max(36, baseSize * 0.09);
     const hexW = Math.sqrt(3) * radius;
     const hexH = 2 * radius;
 
