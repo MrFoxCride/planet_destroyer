@@ -3,12 +3,20 @@ import { store } from '../core/GameEngine.js';
 
 export const PlanetHUD = () => {
   const [planet, setPlanet] = useState(store.get().planet);
+  const [screen, setScreen] = useState(store.get().currentScreen);
 
   useEffect(() => {
     const cb = (s: any) => setPlanet({ ...s.planet });
+    const screenCb = (s: any) => setScreen(s.currentScreen);
     store.on('update', cb);
-    return () => store.off('update', cb);
+    store.on('update', screenCb);
+    return () => {
+      store.off('update', cb);
+      store.off('update', screenCb);
+    };
   }, []);
+
+  if (screen !== 'MainScreen') return null;
 
   const hpRatio = planet.hp / planet.maxHp;
   const dustRatio = Math.min(1, (planet.storedDust || 0) / 10000);

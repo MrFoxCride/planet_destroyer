@@ -7,7 +7,9 @@ export const CurrencyHUD = () => {
   useEffect(() => {
     const cb = (s: any) => setRes({ ...s.resources });
     store.on('update', cb);
-    return () => store.off('update', cb);
+    return () => {
+      store.off('update', cb);
+    };
   }, []);
 
   return (
