@@ -10,11 +10,11 @@ export const BackButton = () => {
     return () => store.off('update', cb);
   }, []);
 
-  if (screen !== 'SectorMap' && screen !== 'GalaxyMap') return null;
+  if (screen !== 'SectorMap') return null;
 
   return (
     <button
-      className="absolute top-12 left-6 w-12 h-12 flex items-center justify-center z-50 pointer-events-auto"
+      className="absolute top-14 left-4 w-12 h-12 flex items-center justify-center z-60 pointer-events-auto"
       onClick={() => stateManager.goBack()}
     >
       <img src="/assets/ui/icon-back.svg" className="w-8 h-8 drop-shadow" />
