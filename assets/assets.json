@@ -20,5 +20,13 @@
     "iconColony": "ui/icon-colony.svg",
     "iconGalaxy": "ui/icon-galaxy.svg",
     "iconBack": "ui/icon-back.svg"
+  },
+  "units": {
+    "extractorIcon": "sprites/unit_extractor_idle.png",
+    "robotIcon": "sprites/unit_robot_idle.png",
+    "scoutIcon": "sprites/unit_scout_idle.png",
+    "extractorCraft": "animations/unit_extractor_craft.json",
+    "robotCraft": "animations/unit_robot_craft.json",
+    "scoutCraft": "animations/unit_scout_craft.json"
   }
 }

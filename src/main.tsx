@@ -18,6 +18,8 @@ import { PlanetActionModal } from './ui/PlanetActionModal.tsx';
 import { ColonyPanel } from './ui/ColonyPanel.tsx';
 import { DustFlyout } from './ui/DustFlyout.tsx';
 import { ExtractionPanel } from './ui/ExtractionPanel.tsx';
+import { DispatchCenterPanel } from './ui/DispatchCenterPanel.tsx';
+import { UnitReadyPopup } from './ui/UnitReadyPopup.tsx';
 
 const container = document.getElementById('canvas-container');
 container.appendChild(app.view);
@@ -38,6 +40,7 @@ function UI() {
   const [dustReward, setDustReward] = React.useState<number | null>(null);
   const [coreReward, setCoreReward] = React.useState<number | null>(null);
   const [extractionInfo, setExtractionInfo] = React.useState<any | null>(null);
+  const [unitReady, setUnitReady] = React.useState<any | null>(null);
   const [unlockId, setUnlockId] = React.useState<string | null>(null);
   const [flyouts, setFlyouts] = React.useState<{ id: number; amount: number; idx: number }[]>([]);
   const flyoutIndex = React.useRef(0);
@@ -73,13 +76,16 @@ function UI() {
     store.on('reward:core', coreCb);
     store.on('update', uiCb);
     store.on('flyout', flyoutCb);
+    const craftCb = (info: any) => setUnitReady(info);
     store.on('extraction:completed', extractionCb);
+    store.on('craft:completed', craftCb);
     return () => {
       store.off('reward:dust', dustCb);
       store.off('reward:core', coreCb);
       store.off('update', uiCb);
       store.off('flyout', flyoutCb);
       store.off('extraction:completed', extractionCb);
+      store.off('craft:completed', craftCb);
     };
   }, []);
 
@@ -112,6 +118,15 @@ function UI() {
           }}
         />
       )}
+      {unitReady && (
+        <UnitReadyPopup
+          unitType={unitReady.type}
+          onClose={() => {
+            store.claimCraft(unitReady.id);
+            setUnitReady(null);
+          }}
+        />
+      )}
       {unlockId && (
         <UnlockSectorModal
           sectorId={unlockId}
@@ -119,6 +134,7 @@ function UI() {
           onUnlock={() => store.unlockSector(unlockId)}
         />
       )}
+      <DispatchCenterPanel />
       <DevPanel />
       <BottomNavBar />
     </div>
@@ -134,6 +150,7 @@ setInterval(() => {
   dispatchSystem.update();
   colonySystem.update();
   store.updateExtractions();
+  store.updateCraftQueue();
 }, 1000);
 
 // expose for debugging
