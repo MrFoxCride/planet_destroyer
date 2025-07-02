@@ -142,7 +142,12 @@ export class GameStateStore {
   }
 
   load(data) {
-    this.state = data;
+    const defaults = this.state;
+    this.state = {
+      ...defaults,
+      ...data,
+      craftQueue: Array.isArray(data.craftQueue) ? data.craftQueue : [],
+    };
     this.emit('update', this.state);
   }
 
@@ -353,6 +358,7 @@ export class GameStateStore {
   }
 
   startUnitCraft(type, cost, duration) {
+    if (!Array.isArray(this.state.craftQueue)) this.state.craftQueue = [];
     if (this.state.craftQueue.length >= 3) return false;
     if (this.state.craftQueue.some((c) => c.type === type && !c.collected))
       return false;
@@ -375,7 +381,10 @@ export class GameStateStore {
   updateCraftQueue() {
     const now = Date.now();
     const completed = [];
-    this.state.craftQueue.forEach((c) => {
+    const queue = Array.isArray(this.state.craftQueue)
+      ? this.state.craftQueue
+      : (this.state.craftQueue = []);
+    queue.forEach((c) => {
       if (!c.done && now >= c.startedAt + c.duration) {
         c.done = true;
         completed.push(c);
@@ -391,6 +400,7 @@ export class GameStateStore {
   }
 
   claimCraft(id) {
+    if (!Array.isArray(this.state.craftQueue)) this.state.craftQueue = [];
     const idx = this.state.craftQueue.findIndex((c) => c.id === id);
     if (idx === -1) return false;
     const item = this.state.craftQueue[idx];
@@ -409,7 +419,10 @@ export class GameStateStore {
 
   finishAllCrafts() {
     const now = Date.now();
-    this.state.craftQueue.forEach((c) => {
+    const queue = Array.isArray(this.state.craftQueue)
+      ? this.state.craftQueue
+      : (this.state.craftQueue = []);
+    queue.forEach((c) => {
       c.startedAt = now - c.duration;
       c.done = true;
     });

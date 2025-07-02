@@ -11,7 +11,9 @@ export class SaveManager {
     try {
       const raw = localStorage.getItem('pd_save');
       if (!raw) return null;
-      return JSON.parse(raw);
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data.craftQueue)) data.craftQueue = [];
+      return data;
     } catch (e) {
       return null;
     }

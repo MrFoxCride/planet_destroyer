@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ErrorBoundary } from './ErrorBoundary.tsx';
 import { weaponSystem } from '../core/WeaponSystem.js';
 import { store } from '../core/GameEngine.js';
 import { WeaponCard } from './WeaponCard.tsx';
@@ -40,7 +41,7 @@ function UnitsTab() {
     return () => store.off('update', cb);
   }, []);
 
-  const queue = state.craftQueue;
+  const queue = Array.isArray(state.craftQueue) ? state.craftQueue : [];
   const units = state.units;
 
   const canCraft = queue.length < 3;
@@ -148,7 +149,13 @@ export const ArsenalWindow = () => {
           </button>
         </div>
         <div className="flex-1 overflow-y-auto">
-          {tab === 'weapons' ? <WeaponsTab /> : <UnitsTab />}
+          {tab === 'weapons' ? (
+            <WeaponsTab />
+          ) : (
+            <ErrorBoundary>
+              <UnitsTab />
+            </ErrorBoundary>
+          )}
         </div>
       </div>
     </div>
