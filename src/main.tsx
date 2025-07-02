@@ -19,6 +19,9 @@ import { ColonyPanel } from './ui/ColonyPanel.tsx';
 import { DustFlyout } from './ui/DustFlyout.tsx';
 import { ExtractionPanel } from './ui/ExtractionPanel.tsx';
 import { UnitReadyPopup } from './ui/UnitReadyPopup.tsx';
+import { ArsenalWindow } from './ui/ArsenalWindow.tsx';
+
+const isDev = import.meta.env.DEV;
 
 const isDev = import.meta.env.DEV;
 
@@ -96,16 +99,14 @@ function UI() {
 
   return (
     <div className="absolute inset-0 pointer-events-none">
-      {screen === 'MainScreen' && (
-        <div
-          id="hud-layer"
-          className={`${isDev ? 'debug-outline' : ''} absolute top-0 left-0 right-0 pointer-events-none`}
-          style={{ height: 'var(--hud-height)' }}
-        >
-          <CurrencyHUD />
-          <PlanetHUD />
-        </div>
-      )}
+      <div
+        id="hud-layer"
+        className={`${isDev ? 'debug-outline' : ''} absolute top-0 left-0 right-0 pointer-events-none`}
+        style={{ height: 'var(--hud-height)' }}
+      >
+        <CurrencyHUD />
+        {screen === 'MainScreen' && <PlanetHUD />}
+      </div>
       <div
         id="modal-layer"
         className="absolute inset-0 pointer-events-none"
@@ -151,7 +152,8 @@ function UI() {
           onUnlock={() => store.unlockSector(unlockId)}
         />
       )}
-        <DevPanel />
+      <ArsenalWindow />
+      <DevPanel />
       </div>
       <div
         id="navbar-layer"

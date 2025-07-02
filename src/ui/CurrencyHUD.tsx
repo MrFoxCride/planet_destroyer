@@ -9,10 +9,8 @@ export const CurrencyHUD = () => {
     const cb = (s: any) => setRes({ ...s.resources });
     const screenCb = (s: any) => setScreen(s.currentScreen);
     store.on('update', cb);
-    store.on('update', screenCb);
     return () => {
       store.off('update', cb);
-      store.off('update', screenCb);
     };
   }, []);
 
