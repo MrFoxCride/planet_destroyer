@@ -1,104 +1,176 @@
-# 0. Vision – Planet Destroyer
+# 0. Концепция — Planet Destroyer
 
-## 0.1. Game Summary
-Planet Destroyer is an infinite idle-tycoon with real-time dispatches, soft-strategic progression, and withdraw-to-earn mechanics. The player destroys planets to gather Cosmic Dust, sends units to extract rare Cores, expands across galactic sectors, and ultimately earns real-world USDT which can be withdrawn via Telegram Wallet. Built as a Telegram Mini App with swipe-based interaction, it's optimized for mobile-only vertical gameplay.
+## 0.1. Общая суть
+Planet Destroyer — вертикальный idle-arcade hybrid для Telegram Mini App. Fast-loop: мгновенное разрушение космических объектов (астероиды, wrecks, станции) в кластерах галактики с быстрым реинвестом в апгрейды и автоматизацию. Планеты встречаются редко, доступны только для колонизации (мета-слой: пассивный доход, апгрейды, автоматизация). Каждый кластер содержит минимум 1 событийный ивент (Reigns-style микро-выбор). Очистка галактики приводит к уникальному endgame-ивенту — “упаковке” галактики в чёрной дыре, где все твои достижения и колонии трансформируются в единую легендарную сущность (“Галактическая Колония”). Очищенные кластеры служат платформой для mid/late-game событий (USDT Nebula, UFO, LiveOps).
 
-## 0.2. Core Fantasy
-You are an anonymous force consuming the universe planet by planet, choosing whether to obliterate, exploit, or colonize each world. As you grow in power, you unlock deeper sectors, rare resources, and real monetary value from your destructive expansion.
+---
 
-## 0.3. Genre & Format
-- **Genre**: Idle Tycoon with light strategy elements  
-- **Format**: Telegram Mini App (TMA), vertical mobile-only  
-- **UX**: Full-touch interface: swipe (left/right), tap, long tap  
+## 0.2. Фантазия игрока
+Ты — лидер цивилизации, разрушаешь и покоряешь космос, строишь, апгрейдишь, автоматизируешь, колонизируешь редкие планеты, а затем собираешь всю свою галактику в одну величественную структуру у чёрной дыры. Все твои достижения переходят на следующий цикл, усиливая тебя на века.
 
-## 0.4. Core Loop
-1. Swipe right to find a new planet  
-2. Attack using crafted weapons  
-3. Gain Cosmic Dust instantly  
-4. Dispatch units to extract Cores from the remaining planetary core  
-5. Spend Dust on:  
-   - Crafting new weapons  
-   - Upgrading units, colonies, and tech  
-   - Sending expeditions  
-6. Unlock new planets and sectors
-7. Navigate through Galaxy/Sector map to explore new entities  
-8. Trigger Reigns-like events (narrative + decision-based impact)  
-9. Receive passive income from colonies  
-10. Receive daily USDT via Nebula events  
-11. Repeat  
+---
 
-## 0.5. Key Systems
-- **Swipe-to-Explore** — Tinder-like horizontal planet navigation  
-- **Weapon Crafting** — Damage = progress. No weapon = soft-limit  
-- **Unit Dispatch** — Extract resources by time-based idle mechanics  
-- **Colony System** — Tamagotchi-like passive generators with upkeep  
-- **Expedition System** — Event chains in Reigns-style interaction  
-- **Sectors** — Map-based meta progression with fog-unlock logic  
-- **Fake Leaderboard** — Motivational, referral-linked, no PvP  
-- **USDT Nebula** — Real-money drops via daily timed & ad-gated events
-- **Galaxy Map** — high-level overworld. Player selects a Sector here. Visually represented as a galactic cloud map.
-- **Sector Map** — mid-level map inside a selected Sector. Player selects a specific entity (Planet, Colony, Nebula) to enter the main screen.
+## 0.3. Жанр и формат
+- Idle-arcade hybrid, sci-fi tycoon
+- Telegram Mini App (вертикаль)
+- Tap/swipe: разрушение, прогрессия, апгрейды, простая мета, endgame-сборка
 
-## 0.6. Currencies
-- `Cosmic Dust` — main soft currency, used for all major actions  
-- `Cores` — rare upgrade material, extracted only via units  
-- `Magmaton` — hard currency (IAP/ad-based), used for speedups & skips  
-- `USDT` — real currency, withdrawable only, earned via special drops  
+---
 
-## 0.7. Monetization
-- Rewarded Ads — spins, speedups, daily Nebula access, bonuses  
-- IAPs — Magmaton packs, resource bundles, automation kits  
-- Time-limited Offers — weapon deals, colony boosts, etc.  
-- Subscription (TBD) — VIP status, auto-harvest, exclusive visuals  
+## 0.4. Карта и прогрессия
+- Галактика — сеть кластеров, соединённых гиперкоридорами.
+- В каждом кластере: 50+ разрушаемых объектов (астероиды, wrecks и др.), минимум 1 микро-ивент.
+- Планеты встречаются редко (примерно 1 на 10 кластеров), только для колонизации.
+- Cleared-кластеры — чекпоинты и площадки для mid/late-game событий.
 
-## 0.8. Progression Drivers
-- Weapon level & tier  
-- Unit type, level, and efficiency  
-- Sector depth (planet rarity, HP, yield)  
-- Colony upgrades and survival  
-- Event outcomes (positive/negative)  
-- Referral tree (rewards scale with invited players)  
+---
 
-## 0.9. Win Condition
-There is no final win. The player aims to reach higher sector yield, build passive income from colonies, and unlock consistent USDT flow.
+## 0.5. Core-loop и события
+- Входишь в кластер — разрушаешь объекты (tap, физика, ядро, вращение).
+- Мгновенно получаешь Dust, иногда Cores/Magmaton, через спец-ивенты — шанс на USDT.
+- Немедленный апгрейд: урон, радиус, новые снаряды, auto-fire, бустеры.
+- Каждый кластер: минимум 1 событийный ивент (Reigns-style выбор, встреча, микро-история).
+- После зачистки — переход к следующему кластеру (автоматически или по выбору).
+- В очищенных кластерах появляются mid/late-game события (USDT Nebula, UFO, LiveOps).
 
-## 0.10. Technical Platform
-- Platform: Telegram Mini App  
-- Engine: PixiJS (WebGL), Tailwind overlay  
-- Storage: Telegram WebApp Cloud API + localStorage fallback  
-- Input: Swipe (horizontal), tap, long tap  
-- Ads: SDK or mock wrappers for rewarded flow  
-- IAP: Telegram Pay API  
-- Orientation: Vertical 9:16 only
-- Sector/Galaxy map layers must be represented via 2-step navigation: Galaxy → Sector → Screen
-- Each map uses FSM transition and lazy-loads only active sector/objects  
+---
 
-## 0.11. Session Structure
-- **Short sessions (1–3 min)** — check timers, collect, trigger events  
-- **Mid sessions (3–10 min)** — spin wheel, upgrade, clear multiple planets  
-- **Long sessions (10+ min)** — expedition runs, Reigns-like chains, colony care  
+## 0.6. Сущности: что можно строить, открывать, улучшать
 
-## 0.12. Target Audience
-- Male/female, 18–35, mobile-native  
-- Telegram-heavy users, crypto-literate or reward-seeking  
-- Fans of idle games, resource games, clickers, passive income fantasies  
-- Similar product affinities: Hamster Kombat, Digger, Reigns, AFK Journey  
+### Оружие и снаряды
+- Улучшение урона (damage), радиуса взрыва, скорости.
+- Открытие новых типов снарядов (penetrator, AoE, chain, splitter и др.).
+- Апгрейды до новых тиров (tier 2+, спецэффекты).
+- Автоматизация: auto-fire, турели, авто-режимы.
 
-## 0.13. Unique Selling Points
-- Swipe-to-destroy core loop  
-- 4-layer economy with real-world exit (USDT)  
-- Reigns-style decision events tied to progression  
-- Tamagotchi-colony meta that requires strategic upkeep  
-- Fully Telegram-native gameplay, no install, no updates  
+### Бустеры
+- Временные ускорители (x2 damage, auto-clear, auto-collect).
+- Уникальные временные эффекты, активация за Dust/Magmaton/ивенты.
+- Апгрейд длительности/эффективности бустеров.
 
-## 0.14. Risks & Mitigations
-- **Exploit Risk** — USDT farm-bots → solved by cooldowns, decay, referral validation  
-- **User Burnout** — Overwhelm by colony micromanagement → auto-tools, subscriptions  
-- **Revenue Unsustainability** — Poor ARPU vs USDT outflow → gated nebula, ad-thresholds  
+### Колонии (только на планетах)
+- Открытие колоний (на пригодных планетах).
+- Апгрейды колонии (уровень, yield, авто-доход).
+- Автоматизация и авто-upkeep.
+- Слоты под здания/улучшения (mid/late-game).
+- Улучшения против decay, бонусы к core-loop.
 
-## 0.15. References
-- *Planet Destroyer: Idle Game* (UX pacing)  
-- *Reigns* (event structure)  
-- *Digger: Pirate Adventures* (dispatch & reward)  
-- *Eve Online* (unit taxonomy inspiration)  
-- *Lords Mobile* (VIP system & visual density)  
+### Пассивные перки/артефакты
+- Открытие/апгрейд слотов для перков.
+- Апгрейд самих перков (idle-buff, auto-эффекты, % к доходу).
+- Уникальные артефакты за события или прогресс.
+
+### Кастомизация
+- Внешний вид снарядов, эффектов, взрывов.
+- Темы UI/галактики (за донат, прогресс, ивенты).
+
+### Автоматизация
+- Улучшение авто-режимов (auto-fire, auto-collect, авто-upkeep).
+- Временные и постоянные эффекты (idle-income, ускорение фона).
+
+### Wheel of Fortune / Спины
+- Открытие новых наград/бонусов в рулетке.
+- Апгрейд частоты/макс. попыток.
+
+### Лидерборд и рефералы
+- Награды/косметика за прогресс в leaderboard и milestones по рефералам.
+
+---
+
+## 0.7. Валюты: Inputs & Outputs
+
+### Dust (soft)
+- **Input:** разрушение объектов, ивенты, колонии (idle), лидерборд, рефералы, Wheel.
+- **Output:** апгрейды оружия, бустеры, кастомизация, upkeep колоний, Wheel-спины, продвижение по кластерам.
+
+### Cores (редкий ресурс)
+- **Input:** редкие объекты, ивенты, топовые колонии, Wheel.
+- **Output:** апгрейды тиров, уникальное оружие, пассивы, автоматизация колоний, ускорение событий.
+
+### Magmaton (hard)
+- **Input:** IAP, milestones, Wheel, рефералы.
+- **Output:** премиум-апгрейды, Dust/Cores, extra Wheel-спины, авто-режимы, снятие лимитов, эксклюзивная кастомизация.
+
+### USDT
+- **Input:** только спец-ивенты (USDT Nebula, Wheel, milestones), строго лимитировано.
+- **Output:** только вывод (min $40, KYC).
+
+### Бустеры
+- **Input:** ивенты, Wheel, покупка за Magmaton.
+- **Output:** временное усиление core/meta, ускорение прогресса.
+
+### Колонии
+- **Input:** открытие только на планетах, апгрейд за Dust/Cores/Magmaton.
+- **Output:** пассивный доход, auto-yield, buff core-loop, upkeep/автоматизация.
+
+---
+
+## 0.8. Экономика и баланс
+- Апгрейды дорожают экспоненциально.
+- Soft-lock: без прокачки core-loop замедляется, игрок теряет темп.
+- Количество валют в запасе ограничено (overflow, decay).
+- Открытие новых сущностей требует инвеста.
+- Лимиты на колонии, Wheel-спины, USDT-ивенты.
+- Anti-hoarding: всегда есть куда реинвестировать, нет “запасов ради запасов”.
+
+---
+
+## 0.9. Endgame: “Упаковка галактики” и meta-прогрессия
+
+- После освоения всех кластеров игрок отправляется в центр галактики (чёрная дыра) для финального ивента — “упаковки”.
+- Все построенные колонии, достижения и апгрейды объединяются в единую “Галактическую Колонию” (legendary colony, Hyperstructure, Seed), дающую meta-бонусы для следующих галактик.
+- Галактика архивируется, становится частью коллекции (“История цивилизации”, галерея трофеев, персональный вклад).
+- Игрок получает перманентные бонусы, уникальные скины/эффекты/достижения — рост цивилизации не прерывается, а усиливается.
+- Новая галактика (новая карта, уникальные сущности, сложность, трофеи, ивенты) генерируется, цикл начинается заново.
+- Каждый новый цикл — выше сложность, уникальные возможности, эксклюзивные награды, доступ к ultra-endgame.
+
+---
+
+## 0.10. Монетизация
+- IAP: Magmaton (апгрейды, бустеры, кастомизация).
+- Rewarded Ads: Wheel, ускорения, доступ к USDT Nebula (10 ADs раз в 6 часов).
+- USDT: только вывод (min $40, верификация).
+
+---
+
+## 0.11. Retention, эмоции, визуал
+- Core-loop всегда fast, максимум отдачи за действие.
+- Каждый кластер — микро-ивент, неожиданные ситуации, быстрый pay-off.
+- Fake-leaderboard — быстрый reset (каждые 10 минут), instant-награды.
+- Рефералы — social-event и FOMO.
+- Каждый апгрейд/разрушение — сильный визуал, звук.
+- Endgame-сборка галактики — кульминация, галерея достижений, персонализация.
+
+---
+
+## 0.12. Баланс и защита от абуза
+- Сложность: рост HP, скорость, уникальные паттерны, мини-боссы.
+- USDT и премиальные награды лимитированы, контроль на стороне сервера.
+- Idle/мета — только буст core-loop, не замена.
+- Все лимиты и механики — прозрачны, объяснены прямо в UI.
+
+---
+
+## 0.13. Out of Scope (на MVP)
+- Глубокая стратегия колоний, войны, логистика — не MVP.
+- PvP и соц. механики — после.
+- Нелинейная карта, альтернативные маршруты — в mid/late-game.
+- Продвинутые LiveOps — только после polish core-loop.
+
+---
+
+## 0.14. Почему играть
+- Fast-fun: разрушай, апгрейдь, строй, автоматизируй, собирай галактику.
+- Новые сущности, апгрейды, реинвест, бесконечный рост.
+- Постепенно открывающаяся глубина: события, мета, колонии, LiveOps, endgame-упаковка.
+- Яркая визуализация прогресса, ощущение роста цивилизации, коллекция галактик и легендарных колоний.
+
+---
+
+## 0.15. Референсы
+- Planet Destroyer: Idle Game (loop)
+- AFK Journey, Merge Mansion (карта/кластеры)
+- Tap Titans (fast progression)
+- Stellaris (карта/масштаб)
+- Reigns (ивенты)
+- Universal Paperclips, Adventure Capitalist (meta-престиж, “collapse” loop)
