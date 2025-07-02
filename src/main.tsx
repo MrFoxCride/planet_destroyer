@@ -23,13 +23,15 @@ import { ArsenalWindow } from './ui/ArsenalWindow.tsx';
 
 const isDev = import.meta.env.DEV;
 
-const isDev = import.meta.env.DEV;
-
 const container = document.getElementById('canvas-container');
 container.appendChild(app.view);
 app.view.id = 'game-canvas';
 app.view.style.width = '100%';
 app.view.style.height = '100%';
+if (isDev) {
+  container.classList.add('debug-outline');
+  document.getElementById('ui-layer')?.classList.add('debug-outline');
+}
 
 // initialize galaxy sectors once
 store.initNamePool(planetNames);
@@ -109,7 +111,7 @@ function UI() {
       </div>
       <div
         id="modal-layer"
-        className="absolute inset-0 pointer-events-none"
+        className={`${isDev ? 'debug-outline' : ''} absolute inset-0 pointer-events-none`}
       >
         <BackButton />
         <ExtractionPanel />

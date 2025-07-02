@@ -101,7 +101,7 @@ export const ArsenalWindow = () => {
       style={{ top: 'var(--hud-height)', bottom: 'var(--navbar-height)', maxWidth: '414px' }}
     >
       <div className="flex flex-col h-full bg-slate-900/90 backdrop-blur p-4">
-        <div className="flex justify-around mb-4" style={{ paddingTop: 0 }}>
+        <div className="flex justify-around sticky top-0 mb-4 bg-slate-900/90" style={{ paddingTop: 0 }}>
           <button
             className={`flex-1 py-2 ${tab === 'weapons' ? 'border-b-2 border-indigo-400 font-bold' : ''}`}
             onClick={() => setTab('weapons')}
