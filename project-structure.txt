@@ -49,6 +49,7 @@
 |   |       feature-wheel-of-fortune.md
 |   |       
 |   \---2-screens
+|       |   screen-arsenal.md
 |       |   screen-earn.md
 |       |   screen-expedition.md
 |       |   screen-friends.md
@@ -58,6 +59,8 @@
 |       |   screen-reigns-event.md
 |       |   screen-settings.md
 |       |   screen-store.md
+|       |   tab-units.md
+|       |   tab-weapons.md
 |       |   
 |       \---popups
 |               component-modal-button.md
@@ -98,7 +101,6 @@
     |       
     +---screens
     |       ArsenalLab.js
-    |       DispatchCenter.js
     |       FortuneWheel.js
     |       Leaderboard.js
     |       LoadingScreen.js
@@ -107,4 +109,6 @@
     |       
     \---ui
             .gitkeep
+            UnitCard.js
+            WeaponCard.js
             

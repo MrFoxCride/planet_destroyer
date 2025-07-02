@@ -1,6 +1,6 @@
 # component-create-unit-button.md
 
-Simple button used in DispatchCenter to start crafting a unit.
+Simple button used in the **Units** tab of the Arsenal screen to start crafting a unit.
 
 ## Props
 - `onClick: () => void` – action callback.

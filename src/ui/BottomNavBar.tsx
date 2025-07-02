@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { stateManager, store } from '../core/GameEngine.js';
 
 const buttons = [
-  { id: 'Profile', label: 'Profile', icon: '/assets/ui/nav-profile.svg' },
+  { id: 'Earn', label: 'Earn', icon: '/assets/ui/nav-earn.svg' },
   { id: 'Store', label: 'Store', icon: '/assets/ui/nav-store.svg' },
   { id: 'MainScreen', label: 'Main', icon: '/assets/ui/nav-main.svg' },
-  { id: 'Earn', label: 'Earn', icon: '/assets/ui/nav-earn.svg' },
+  { id: 'Arsenal', label: 'Arsenal', icon: '/assets/ui/nav-store.svg' },
   { id: 'Friends', label: 'Friends', icon: '/assets/ui/nav-friends.svg' },
 ];
 
